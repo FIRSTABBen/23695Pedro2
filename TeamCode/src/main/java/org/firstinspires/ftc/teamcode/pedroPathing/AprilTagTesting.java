@@ -183,7 +183,7 @@ public class AprilTagTesting extends OpMode
         else if ((result.getStaleness() < 100) && (llResult != null && llResult.isValid()) && tx == 0 && gamepad2.dpad_up) {
             turningPower = 0;
         }
-        else if
+        //else if
 
 
         // old shooter controls, keep commented out for now
@@ -224,7 +224,7 @@ public class AprilTagTesting extends OpMode
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
-        turret.setPower(turningPower);
+        //turret.setPower(turningPower);
 
         //Claw Code: Opens with GP2 X and opens less when past vertical position
         // BIGGER CLOSES MORE*********************
