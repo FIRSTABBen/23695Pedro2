@@ -39,7 +39,7 @@ public class Constants {
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(3.5)
-            .strafePodX(-6.75)
+            .strafePodX(6.75)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")

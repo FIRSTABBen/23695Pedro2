@@ -55,8 +55,8 @@ public class SimpleDrive extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.REVERSE);
-        intakeForward.setDirection(DcMotor.Direction.REVERSE);
-        intakeBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeForward.setDirection(DcMotor.Direction.FORWARD);
+        intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -126,7 +126,7 @@ public class SimpleDrive extends OpMode
         if (gamepad2.left_trigger > 0.5) {
             intakeForward.setPower(1);
         }
-        else if (gamepad2.left_bumper && shooter.getVelocity() > 1399) {
+        else if (gamepad2.left_bumper) {
             intakeBack.setPower(1);
         }
         else if (gamepad2.left_bumper && gamepad2.left_trigger > 0.5) {
