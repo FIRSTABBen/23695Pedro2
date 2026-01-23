@@ -183,7 +183,10 @@ public class AprilTagTesting extends OpMode
         else if ((result.getStaleness() < 100) && (llResult != null && llResult.isValid()) && tx == 0 && gamepad2.dpad_up) {
             turningPower = 0;
         }
-        else if
+        else {
+            turningPower = 0;
+        }
+
 
 
         // old shooter controls, keep commented out for now
