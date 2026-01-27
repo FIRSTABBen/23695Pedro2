@@ -50,7 +50,7 @@ public class JoystickTesting extends OpMode{
         telemetry.addData("gamepad 1 RB", gamepad1.right_bumper);
 
 
-        
+
 
         telemetry.addData("", blank);
         telemetry.addData("", blank);

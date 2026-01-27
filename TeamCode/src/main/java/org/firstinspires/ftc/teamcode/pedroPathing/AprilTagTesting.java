@@ -120,6 +120,10 @@ public class AprilTagTesting extends OpMode
         double turningPower;
 
 
+        boolean priorityImput = false;
+        boolean anyImput = false;
+
+
 //      y
 //   x     b   << controller button layout
 //      a
@@ -162,18 +166,20 @@ public class AprilTagTesting extends OpMode
         // intake and transfer controls
         if (gamepad2.left_trigger > 0.5) {
             intakeForward.setPower(1);
+            priorityImput = true;
+            anyImput = true;
         }
-        else if (gamepad2.left_bumper && shooter.getVelocity() > 1399) {
+        if (gamepad2.left_bumper) {
             intakeBack.setPower(1);
+            priorityImput = true;
+            anyImput = true;
         }
-        else if (gamepad2.left_bumper && gamepad2.left_trigger > 0.5) {
-            intakeForward.setPower(1);
-            intakeBack.setPower(1);
-        }
-        else if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
             intakeBack.setPower(-1);
-        } else {
+            anyImput = true;
+        }
+        if (!anyImput) {
             intakeForward.setPower(0);
             intakeBack.setPower(0);
         }
