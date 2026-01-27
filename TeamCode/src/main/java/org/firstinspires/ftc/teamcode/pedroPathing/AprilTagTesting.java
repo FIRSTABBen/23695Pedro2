@@ -34,6 +34,7 @@ public class AprilTagTesting extends OpMode
     private IMU imu; //emu
 
     double shooterVelocity = 0;
+//    boolean shooterPowerControl = true;
 
 
     @Override
@@ -119,6 +120,10 @@ public class AprilTagTesting extends OpMode
         double turningPower;
 
 
+        boolean priorityImput = false;
+        boolean anyImput = false;
+
+
 //      y
 //   x     b   << controller button layout
 //      a
@@ -147,9 +152,9 @@ public class AprilTagTesting extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            shooterVelocity = 1800;
+            shooterVelocity = 1000;
         } else if (gamepad2.right_bumper) {
-            shooterVelocity = 1400;
+            shooterVelocity = 750;
         }
         else {
             shooterVelocity = 0;
@@ -161,18 +166,20 @@ public class AprilTagTesting extends OpMode
         // intake and transfer controls
         if (gamepad2.left_trigger > 0.5) {
             intakeForward.setPower(1);
+            priorityImput = true;
+            anyImput = true;
         }
-        else if (gamepad2.left_bumper && shooter.getVelocity() > 1399) {
+        if (gamepad2.left_bumper) {
             intakeBack.setPower(1);
+            priorityImput = true;
+            anyImput = true;
         }
-        else if (gamepad2.left_bumper && gamepad2.left_trigger > 0.5) {
-            intakeForward.setPower(1);
-            intakeBack.setPower(1);
-        }
-        else if (gamepad2.dpad_down) {
+        if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
             intakeBack.setPower(-1);
-        } else {
+            anyImput = true;
+        }
+        if (!anyImput) {
             intakeForward.setPower(0);
             intakeBack.setPower(0);
         }
@@ -180,20 +187,26 @@ public class AprilTagTesting extends OpMode
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
         }
-        else if ((result.getStaleness() < 100) && (llResult != null && llResult.isValid()) && tx == 0 && gamepad2.dpad_up) {
+        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 1) && gamepad2.dpad_up) {
+            turningPower = (tx/40) + 0.2;
+        }
+        else if (tx < -1){
+            turningPower = (tx/40) - 0.2;
+        }
+        else {
             turningPower = 0;
         }
-        //else if
+
 
 
         // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad1.y && shooterVelocity != 0) {
+//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 0) {
 //                shooterVelocity += 280;
 //                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad1.a && shooterVelocity != 2800) {
+//            } else if (shooterPowerControl && gamepad2.a && shooterVelocity != 2800) {
 //                shooterVelocity -= 280;
 //                shooterPowerControl = false;
-//            } else if (!gamepad1.a && !gamepad1.y) {
+//            } else if (!gamepad2.a && !gamepad2.y) {
 //                shooterPowerControl = true;
 //            }
         // self destruct button
@@ -224,7 +237,7 @@ public class AprilTagTesting extends OpMode
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
-        //turret.setPower(turningPower);
+        turret.setPower(turningPower);
 
         //Claw Code: Opens with GP2 X and opens less when past vertical position
         // BIGGER CLOSES MORE*********************
@@ -236,6 +249,7 @@ public class AprilTagTesting extends OpMode
         telemetry.addData("left rear motor expected", "power = %.2f", leftBackPower);
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
+        //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
         telemetry.addData("", limelight_telemetry);
         if (llResult != null && llResult.isValid()) {
             tagseen = "true";
@@ -246,7 +260,6 @@ public class AprilTagTesting extends OpMode
         telemetry.addData("tagSeen ", tagseen);
         telemetry.addData("limelight x = ", tx);
         telemetry.addData("limelight pipeline = ", pipeline);
-        //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
         List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
         for (LLResultTypes.FiducialResult fr : fiducialResults) {
             telemetry.addData("tag ", "ID: %d", fr.getFiducialId());
