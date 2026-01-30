@@ -76,8 +76,8 @@ public class AprilTagTesting extends OpMode
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.REVERSE);
-        intakeForward.setDirection(DcMotor.Direction.REVERSE);
-        intakeBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeForward.setDirection(DcMotor.Direction.FORWARD);
+        intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -187,11 +187,11 @@ public class AprilTagTesting extends OpMode
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
         }
-        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 1) && gamepad2.dpad_up) {
-            turningPower = (tx/40) + 0.2;
+        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 3) && gamepad2.dpad_up) {
+            turningPower = (tx/40) + 0.1;
         }
-        else if (tx < -1){
-            turningPower = (tx/40) - 0.2;
+        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx < -3) && gamepad2.dpad_up){
+            turningPower = (tx/40) - 0.1;
         }
         else {
             turningPower = 0;
