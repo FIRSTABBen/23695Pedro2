@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
@@ -18,6 +19,8 @@ public class SimpleDrive extends OpMode
     private DcMotor intakeForward = null;
     private DcMotor intakeBack = null;
     private DcMotor turret = null;
+    private Servo ballBlocker = null;
+    private Servo hood = null;
 
     double shooterVelocity = 0;
 
@@ -36,6 +39,8 @@ public class SimpleDrive extends OpMode
         intakeForward = hardwareMap.get(DcMotor.class, "intakeForward");
         intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
         turret = hardwareMap.get(DcMotor.class, "turret");
+        ballBlocker = hardwareMap.get(Servo.class, "blocker");
+        hood = hardwareMap.get(Servo.class, "hood");
 
 
         //other motor initializing
@@ -186,6 +191,7 @@ public class SimpleDrive extends OpMode
         telemetry.addData("left rear motor expected", "power = %.2f", leftBackPower);
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
+        telemetry.addData("hood ", "pos = %.2f", hood.getPosition());
     }
 
 

@@ -115,6 +115,7 @@ public class AprilTagTesting extends OpMode
         limelight.start();
         limelight.setPollRateHz(90);
         double tx = result.getTx();
+        double ta = result.getTa();
         String limelight_telemetry = "Limelight Data";
         int pipeline = result.getPipelineIndex();
         double turningPower;
@@ -259,6 +260,7 @@ public class AprilTagTesting extends OpMode
         }
         telemetry.addData("tagSeen ", tagseen);
         telemetry.addData("limelight x = ", tx);
+        telemetry.addData("limelight a = ", ta);
         telemetry.addData("limelight pipeline = ", pipeline);
         List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
         for (LLResultTypes.FiducialResult fr : fiducialResults) {
