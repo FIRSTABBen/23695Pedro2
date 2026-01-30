@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
@@ -18,6 +19,8 @@ public class SimpleDrive extends OpMode
     private DcMotor intakeForward = null;
     private DcMotor intakeBack = null;
     private DcMotor turret = null;
+    private Servo hood = null;
+    private Servo blocker = null;
 
     double shooterVelocity = 0;
 
@@ -36,6 +39,8 @@ public class SimpleDrive extends OpMode
         intakeForward = hardwareMap.get(DcMotor.class, "intakeForward");
         intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
         turret = hardwareMap.get(DcMotor.class, "turret");
+        hood = hardwareMap.get(Servo.class, "hood");
+        blocker = hardwareMap.get(Servo.class, "blocker");
 
 
         //other motor initializing
@@ -58,7 +63,7 @@ public class SimpleDrive extends OpMode
         intakeForward.setDirection(DcMotor.Direction.REVERSE);
         intakeBack.setDirection(DcMotor.Direction.REVERSE);
         turret.setDirection(DcMotor.Direction.FORWARD);
-
+        hood.setDirection(Servo.Direction.FORWARD);
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -176,7 +181,11 @@ public class SimpleDrive extends OpMode
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
-
+        if (gamepad1.a) {
+            hood.setPosition(0.05);
+        } else if (gamepad1.b) {
+            hood.setPosition(0.2);
+        }
         //Claw Code: Opens with GP2 X and opens less when past vertical position
         // BIGGER CLOSES MORE*********************
 
