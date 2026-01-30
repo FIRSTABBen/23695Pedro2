@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import java.util.List;
 
 @TeleOp
-public class AprilTagTesting extends OpMode
+public class ShooterPrecisionTesting extends OpMode
 {
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -39,7 +39,9 @@ public class AprilTagTesting extends OpMode
     private IMU imu; //emu
 
     double shooterVelocity = 0;
-//    boolean shooterPowerControl = true;
+    boolean shooterPowerControl = true;
+    boolean hoodController = true;
+    double hoodPos;
 
 
     @Override
@@ -161,16 +163,16 @@ public class AprilTagTesting extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            shooterVelocity = 1000;
+            shooterVelocity = 1750;
+            hood.setPosition(0.27);
         } else if (gamepad2.right_bumper) {
-            shooterVelocity = 750;
+            shooterVelocity = 1400;
+            hood.setPosition(0.05);
         }
         else {
             shooterVelocity = 0;
+            hood.setPosition(0.05);
         }
-//            if (gamepad1.dpad_down) {
-//                shooterVelocity = 0;
-//            }
 
         // intake and transfer controls
         if (gamepad2.left_trigger > 0.5) {
@@ -192,6 +194,7 @@ public class AprilTagTesting extends OpMode
             intakeForward.setPower(0);
             intakeBack.setPower(0);
         }
+
         // turret code
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
@@ -208,14 +211,14 @@ public class AprilTagTesting extends OpMode
 
 
 
-        // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 0) {
-//                shooterVelocity += 280;
+//        // old shooter controls, keep commented out for now
+//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 2800) {
+//                shooterVelocity += 100;
 //                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad2.a && shooterVelocity != 2800) {
-//                shooterVelocity -= 280;
+//            } else if (shooterPowerControl && gamepad2.x && shooterVelocity != 0) {
+//                shooterVelocity -= 100;
 //                shooterPowerControl = false;
-//            } else if (!gamepad2.a && !gamepad2.y) {
+//            } else if (!gamepad2.x && !gamepad2.y) {
 //                shooterPowerControl = true;
 //            }
         // self destruct button
@@ -239,6 +242,11 @@ public class AprilTagTesting extends OpMode
             telemetry.addData("data", "bad (" + staleness + " ms)");
         }
 
+//        if (gamepad2.a) {
+//            hood.setPosition(0.05);
+//        } else if (gamepad2.b) {
+//            hood.setPosition(0.27);
+//        }
 
         //setting final power levels
         leftFrontDrive.setPower(leftFrontPower);
@@ -247,11 +255,7 @@ public class AprilTagTesting extends OpMode
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
         turret.setPower(turningPower);
-        if (gamepad1.a) {
-            hood.setPosition(0.05);
-        } else if (gamepad1.b) {
-            hood.setPosition(0.2);
-        }
+
 
         //Claw Code: Opens with GP2 X and opens less when past vertical position
         // BIGGER CLOSES MORE*********************
