@@ -19,8 +19,8 @@ public class SimpleDrive extends OpMode
     private DcMotor intakeForward = null;
     private DcMotor intakeBack = null;
     private DcMotor turret = null;
-    private Servo ballBlocker = null;
     private Servo hood = null;
+    private Servo blocker = null;
 
     double shooterVelocity = 0;
 
@@ -39,8 +39,8 @@ public class SimpleDrive extends OpMode
         intakeForward = hardwareMap.get(DcMotor.class, "intakeForward");
         intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
         turret = hardwareMap.get(DcMotor.class, "turret");
-        ballBlocker = hardwareMap.get(Servo.class, "blocker");
         hood = hardwareMap.get(Servo.class, "hood");
+        blocker = hardwareMap.get(Servo.class, "blocker");
 
 
         //other motor initializing
@@ -63,7 +63,7 @@ public class SimpleDrive extends OpMode
         intakeForward.setDirection(DcMotor.Direction.REVERSE);
         intakeBack.setDirection(DcMotor.Direction.REVERSE);
         turret.setDirection(DcMotor.Direction.FORWARD);
-
+        hood.setDirection(Servo.Direction.FORWARD);
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -181,7 +181,11 @@ public class SimpleDrive extends OpMode
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
-
+        if (gamepad1.a) {
+            hood.setPosition(0.05);
+        } else if (gamepad1.b) {
+            hood.setPosition(0.2);
+        }
         //Claw Code: Opens with GP2 X and opens less when past vertical position
         // BIGGER CLOSES MORE*********************
 
@@ -191,7 +195,6 @@ public class SimpleDrive extends OpMode
         telemetry.addData("left rear motor expected", "power = %.2f", leftBackPower);
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
-        telemetry.addData("hood ", "pos = %.2f", hood.getPosition());
     }
 
 
