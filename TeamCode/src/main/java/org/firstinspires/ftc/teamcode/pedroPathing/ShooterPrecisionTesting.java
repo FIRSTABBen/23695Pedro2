@@ -89,6 +89,7 @@ public class ShooterPrecisionTesting extends OpMode
         intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
         hood.setDirection(Servo.Direction.FORWARD);
+        blocker.setDirection(Servo.Direction.FORWARD);
 
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -159,6 +160,12 @@ public class ShooterPrecisionTesting extends OpMode
             leftBackPower /= 4;
             rightFrontPower /= 4;
             rightBackPower /= 4;
+        }
+        if (gamepad2.dpad_left){
+            blocker.setPosition(0.2);
+        }
+        else {
+            blocker.setPosition(0.3);
         }
 
         // shooter controls
