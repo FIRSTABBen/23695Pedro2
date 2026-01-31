@@ -8,15 +8,14 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous
 
-public class Gladblu extends OpMode {
+public class Gladred extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
@@ -26,12 +25,12 @@ public class Gladblu extends OpMode {
     private DcMotor intakeBack =null;
     private Servo hood = null;
     private Servo blocker = null;
-    private final Pose scorePose = new Pose(56,8, Math.toRadians(180));
-    private final Pose path2 = new Pose(9,25,Math.toRadians(270));
-    private final Pose path3 = new Pose(10,10,Math.toRadians(270));
-    private final Pose path4 = new Pose(56,20,Math.toRadians(180));
+    private final Pose scorePose = new Pose(88,8, Math.toRadians(0));
+    private final Pose path2 = new Pose(135,25,Math.toRadians(270));
+    private final Pose path3 = new Pose(134,10,Math.toRadians(270));
+    private final Pose path4 = new Pose(88,20,Math.toRadians(0));
     //scorePose
-    private final Pose endPose = new Pose(35,8,Math.toRadians(180));
+    private final Pose endPose = new Pose(109,8,Math.toRadians(0));
     private PathChain Grab1, end;
     public void autonomousPathUpdate() {
         shooter.setVelocity(1750);
