@@ -42,6 +42,8 @@ public class ShooterPrecisionTesting extends OpMode
     boolean shooterPowerControl = true;
     boolean hoodController = true;
     double hoodPos;
+    int tagID = 0;
+    double turningPower = 0;
 
 
     @Override
@@ -101,6 +103,9 @@ public class ShooterPrecisionTesting extends OpMode
         intakeBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        hood.setPosition(0.27);
+        blocker.setPosition(0.4);
+
 
         telemetry.addData("status", "Initialized");
     }
@@ -129,7 +134,16 @@ public class ShooterPrecisionTesting extends OpMode
         double ta = result.getTa();
         String limelight_telemetry = "Limelight Data";
         int pipeline = result.getPipelineIndex();
-        double turningPower;
+
+        if (llResult.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                tagID = fr.getFiducialId();
+            }
+        }
+        else {
+            tagID = 0;
+        }
 
 
         boolean priorityImput = false;
@@ -161,24 +175,22 @@ public class ShooterPrecisionTesting extends OpMode
             rightFrontPower /= 4;
             rightBackPower /= 4;
         }
-        if (gamepad2.dpad_left){
-            blocker.setPosition(0.2);
-        }
-        else {
-            blocker.setPosition(0.3);
-        }
+
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            shooterVelocity = 1750;
-            hood.setPosition(0.27);
+            blocker.setPosition(0.2);
+            hood.setPosition(0.24);
+            shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
-            shooterVelocity = 1400;
-            hood.setPosition(0.05);
+            hood.setPosition(0.1);
+            blocker.setPosition(0.2);
+            shooterVelocity = 1100;
         }
         else {
-            shooterVelocity = 0;
+            blocker.setPosition(0.4);
             hood.setPosition(0.05);
+            shooterVelocity = 0;
         }
 
         // intake and transfer controls
@@ -206,15 +218,19 @@ public class ShooterPrecisionTesting extends OpMode
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
         }
-        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 3) && gamepad2.dpad_up) {
-            turningPower = (tx/40) + 0.1;
+
+        else  if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 3) && gamepad2.dpad_up) {
+            turningPower = (tx / 40) + 0.1;
         }
-        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx < -3) && gamepad2.dpad_up){
-            turningPower = (tx/40) - 0.1;
+
+        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx < -3) && gamepad2.dpad_up) {
+            turningPower = (tx / 40) - 0.1;
         }
+
         else {
             turningPower = 0;
         }
+
 
 
 
@@ -286,10 +302,7 @@ public class ShooterPrecisionTesting extends OpMode
         telemetry.addData("limelight x = ", tx);
         telemetry.addData("limelight a = ", ta);
         telemetry.addData("limelight pipeline = ", pipeline);
-        List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
-        for (LLResultTypes.FiducialResult fr : fiducialResults) {
-            telemetry.addData("tag ", "ID: %d", fr.getFiducialId());
-        }
+        telemetry.addData("tag ", "ID: %d", tagID);
     }
 
 
