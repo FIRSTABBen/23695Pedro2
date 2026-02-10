@@ -6,13 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -21,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import java.util.List;
 
 @TeleOp
-public class ShooterPrecisionTesting extends OpMode
+public class ShooterPrecisionTestingRed extends OpMode
 {
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -44,6 +41,7 @@ public class ShooterPrecisionTesting extends OpMode
     double hoodPos;
     int tagID = 0;
     double turningPower = 0;
+    boolean gamepadImput = false;
 
 
     @Override
@@ -217,19 +215,32 @@ public class ShooterPrecisionTesting extends OpMode
         // turret code
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
+            gamepadImput = true;
         }
-
-        else  if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx > 3) && gamepad2.dpad_up) {
-            turningPower = (tx / 40) + 0.1;
-        }
-
-        else if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && (tx < -3) && gamepad2.dpad_up) {
-            turningPower = (tx / 40) - 0.1;
-        }
-
         else {
-            turningPower = 0;
+            gamepadImput = false;
         }
+
+        if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput) {
+            if (ta < 0.5){
+              if (tx < 0){
+                  turningPower = (tx / 23) - 0.1;
+              }
+              else if (tx > 6){
+                  turningPower = (tx / 23) + 0.1;
+              }
+            }
+            else if (ta > 0.5){
+                if (tx < -3){
+                    turningPower = (tx / 23) - 0.1;
+                }
+                else if (tx > 3){
+                    turningPower = (tx / 23) + 0.1;
+                }
+            }
+        }
+
+
 
 
 
