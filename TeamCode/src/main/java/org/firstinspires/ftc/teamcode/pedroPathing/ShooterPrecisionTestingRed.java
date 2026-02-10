@@ -112,11 +112,12 @@ public class ShooterPrecisionTestingRed extends OpMode
     //Set variables//
     @Override
     public void loop() {
+        limelight.start();
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         limelight.updateRobotOrientation(orientation.getYaw());
-        LLResult llResult = limelight.getLatestResult();
-        if (llResult != null && llResult.isValid()) {
-            Pose3D botPose =llResult.getBotpose_MT2();
+        LLResult result = limelight.getLatestResult();
+        if (result != null && result.isValid()) {
+            Pose3D botPose = result.getBotpose_MT2();
         }
 
         // drive variables
@@ -125,15 +126,14 @@ public class ShooterPrecisionTestingRed extends OpMode
         double leftBackPower;
         double rightBackPower;
 
-        LLResult result = limelight.getLatestResult();
-        limelight.start();
+
         limelight.setPollRateHz(90);
         double tx = result.getTx();
         double ta = result.getTa();
         String limelight_telemetry = "Limelight Data";
         int pipeline = result.getPipelineIndex();
 
-        if (llResult.isValid()) {
+        if (result.isValid()) {
             List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
             for (LLResultTypes.FiducialResult fr : fiducialResults) {
                 tagID = fr.getFiducialId();
@@ -221,21 +221,15 @@ public class ShooterPrecisionTestingRed extends OpMode
             gamepadImput = false;
         }
 
-        if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput) {
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepadImput) {
             if (ta < 0.5){
-              if (tx < 0){
-                  turningPower = (tx / 23) - 0.1;
-              }
-              else if (tx > 6){
-                  turningPower = (tx / 23) + 0.1;
+              if (tx < 0 || tx > 6){
+                  turningPower = (tx / 32.5);
               }
             }
             else if (ta > 0.5){
-                if (tx < -3){
-                    turningPower = (tx / 23) - 0.1;
-                }
-                else if (tx > 3){
-                    turningPower = (tx / 23) + 0.1;
+                if (tx < -3 || tx > 3){
+                    turningPower = (tx / 32.5);
                 }
             }
         }
@@ -303,7 +297,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
         //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
         telemetry.addData("", limelight_telemetry);
-        if (llResult != null && llResult.isValid()) {
+        if (result != null && result.isValid()) {
             tagseen = "true";
         }
         else {

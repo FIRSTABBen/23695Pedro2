@@ -223,19 +223,13 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput) {
             if (ta < 0.5){
-              if (tx < -6){
-                  turningPower = (tx / 23) - 0.1;
-              }
-              else if (tx > 0){
-                  turningPower = (tx / 23) + 0.1;
+              if (tx < -6 || tx > 0){
+                  turningPower = (tx / 23);
               }
             }
             else if (ta > 0.5){
-                if (tx < -3){
-                    turningPower = (tx / 23) - 0.1;
-                }
-                else if (tx > 3){
-                    turningPower = (tx / 23) + 0.1;
+                if (tx < -3 || tx > 3){
+                turningPower = (tx / 23);
                 }
             }
         }
