@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,10 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -42,6 +42,7 @@ public class ShooterPrecisionTestingRed extends OpMode
     int tagID = 0;
     double turningPower = 0;
     boolean gamepadImput = false;
+    boolean tagImput = false;
 
 
     @Override
@@ -112,12 +113,11 @@ public class ShooterPrecisionTestingRed extends OpMode
     //Set variables//
     @Override
     public void loop() {
-        limelight.start();
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         limelight.updateRobotOrientation(orientation.getYaw());
-        LLResult result = limelight.getLatestResult();
-        if (result != null && result.isValid()) {
-            Pose3D botPose = result.getBotpose_MT2();
+        LLResult llResult = limelight.getLatestResult();
+        if (llResult != null && llResult.isValid()) {
+            Pose3D botPose =llResult.getBotpose_MT2();
         }
 
         // drive variables
@@ -126,14 +126,15 @@ public class ShooterPrecisionTestingRed extends OpMode
         double leftBackPower;
         double rightBackPower;
 
-
+        LLResult result = limelight.getLatestResult();
+        limelight.start();
         limelight.setPollRateHz(90);
         double tx = result.getTx();
         double ta = result.getTa();
         String limelight_telemetry = "Limelight Data";
         int pipeline = result.getPipelineIndex();
 
-        if (result.isValid()) {
+        if (llResult.isValid()) {
             List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
             for (LLResultTypes.FiducialResult fr : fiducialResults) {
                 tagID = fr.getFiducialId();
@@ -177,18 +178,18 @@ public class ShooterPrecisionTestingRed extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0.2);
+            blocker.setPosition(0.18);
             hood.setPosition(0.24);
             shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.1);
+            hood.setPosition(0.12);
             blocker.setPosition(0.2);
             shooterVelocity = 1100;
         }
         else {
             blocker.setPosition(0.4);
             hood.setPosition(0.05);
-            shooterVelocity = 0;
+            shooterVelocity = 800;
         }
 
         // intake and transfer controls
@@ -213,19 +214,25 @@ public class ShooterPrecisionTestingRed extends OpMode
         }
 
         // turret code
-        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
-            turningPower = (gamepad2.left_stick_x / 2);
-            gamepadImput = true;
-        }
-        else {
-            gamepadImput = false;
+
+        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad1.right_stick_y != 0){
+            terminateOpModeNow();
         }
 
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepadImput && gamepad2.dpad_up) {
+        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
+            turningPower = (gamepad2.left_stick_x / 2);
+        }
+        else {
+            turningPower = 0;
+        }
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
             if (ta < 0.5){
-              if (tx < 0 || tx > 6){
-                  turningPower = (tx / 32.5);
-              }
+                if (tx < 0 || tx > 6){
+                    turningPower = (tx / 32.5);
+                }
+                else {
+                    turningPower = 0;
+                }
             }
             else if (ta > 0.5){
                 if (tx < -3 || tx > 3){
@@ -233,6 +240,9 @@ public class ShooterPrecisionTestingRed extends OpMode
                 }
                 else if (tx < -7 || tx > 7){
                     turningPower = (tx / 40);
+                }
+                else {
+                    turningPower = 0;
                 }
             }
         }
@@ -300,7 +310,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
         //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
         telemetry.addData("", limelight_telemetry);
-        if (result != null && result.isValid()) {
+        if (llResult != null && llResult.isValid()) {
             tagseen = "true";
         }
         else {
