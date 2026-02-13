@@ -220,16 +220,22 @@ public class ShooterPrecisionTestingBlue extends OpMode
         else {
             gamepadImput = false;
         }
+        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button){
+            terminateOpModeNow();
+        }
 
-        if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput) {
+        if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput && gamepad2.dpad_up) {
             if (ta < 0.5){
               if (tx < -6 || tx > 0){
-                  turningPower = (tx / 23);
+                  turningPower = (tx / 32.5);
               }
             }
             else if (ta > 0.5){
                 if (tx < -3 || tx > 3){
-                turningPower = (tx / 23);
+                turningPower = (tx / 32.5);
+                }
+                else if (tx < -7 || tx > 7){
+                    turningPower = (tx / 40);
                 }
             }
         }

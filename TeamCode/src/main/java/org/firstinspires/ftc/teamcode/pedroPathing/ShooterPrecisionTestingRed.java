@@ -221,7 +221,7 @@ public class ShooterPrecisionTestingRed extends OpMode
             gamepadImput = false;
         }
 
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepadImput) {
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepadImput && gamepad2.dpad_up) {
             if (ta < 0.5){
               if (tx < 0 || tx > 6){
                   turningPower = (tx / 32.5);
@@ -230,6 +230,9 @@ public class ShooterPrecisionTestingRed extends OpMode
             else if (ta > 0.5){
                 if (tx < -3 || tx > 3){
                     turningPower = (tx / 32.5);
+                }
+                else if (tx < -7 || tx > 7){
+                    turningPower = (tx / 40);
                 }
             }
         }
