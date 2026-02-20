@@ -42,6 +42,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
     int tagID = 0;
     double turningPower = 0;
     boolean gamepadImput = false;
+    boolean tagImput = false;
 
 
     @Override
@@ -177,18 +178,18 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0.2);
+            blocker.setPosition(0.18);
             hood.setPosition(0.24);
             shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.1);
+            hood.setPosition(0.12);
             blocker.setPosition(0.2);
-            shooterVelocity = 1100;
+            shooterVelocity = 1250;
         }
         else {
             blocker.setPosition(0.4);
             hood.setPosition(0.05);
-            shooterVelocity = 0;
+            shooterVelocity = 800;
         }
 
         // intake and transfer controls
@@ -213,23 +214,35 @@ public class ShooterPrecisionTestingBlue extends OpMode
         }
 
         // turret code
+
+//        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad2.right_stick_x != 0){
+//            terminateOpModeNow();
+//        }
+
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
-            gamepadImput = true;
         }
         else {
-            gamepadImput = false;
+            turningPower = 0;
         }
-
-        if ((result.getStaleness() < 100) && ((llResult != null && llResult.isValid())) && !gamepadImput) {
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
             if (ta < 0.5){
-              if (tx < -6 || tx > 0){
-                  turningPower = (tx / 23);
-              }
+                if (tx < -6 || tx > 0){
+                    turningPower = (tx / 32.5);
+                }
+                else {
+                    turningPower = 0;
+                }
             }
             else if (ta > 0.5){
                 if (tx < -3 || tx > 3){
-                turningPower = (tx / 23);
+                    turningPower = (tx / 32.5);
+                }
+                else if (tx < -7 || tx > 7){
+                    turningPower = (tx / 40);
+                }
+                else {
+                    turningPower = 0;
                 }
             }
         }
