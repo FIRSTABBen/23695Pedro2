@@ -41,8 +41,11 @@ public class ShooterPrecisionTestingRed extends OpMode
     double hoodPos;
     int tagID = 0;
     double turningPower = 0;
+    double transferPower = 0;
     boolean gamepadImput = false;
     boolean tagImput = false;
+    int transferTicker = 200;
+    boolean transferTickerCheck = false;
 
 
     @Override
@@ -199,18 +202,33 @@ public class ShooterPrecisionTestingRed extends OpMode
             anyImput = true;
         }
         if (gamepad2.left_bumper) {
-            intakeBack.setPower(1);
+            transferPower = 0;
             priorityImput = true;
             anyImput = true;
         }
         if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
-            intakeBack.setPower(-1);
+            transferPower = 0;
             anyImput = true;
         }
         if (!anyImput) {
             intakeForward.setPower(0);
-            intakeBack.setPower(0);
+            transferPower = 0;
+        }
+
+        if (gamepad2.x && !transferTickerCheck){
+            transferTickerCheck = true;
+            transferTicker = 200;
+        }
+        if (transferTickerCheck){
+            if (transferTicker != 0){
+                transferTicker =- 1;
+                transferPower = 1;
+            }
+            else {
+                transferPower = 0;
+                transferTickerCheck = false;
+            }
         }
 
         // turret code
@@ -294,6 +312,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+        intakeBack.setPower(transferPower);
         shooter.setVelocity(shooterVelocity);
         turret.setPower(turningPower);
 
