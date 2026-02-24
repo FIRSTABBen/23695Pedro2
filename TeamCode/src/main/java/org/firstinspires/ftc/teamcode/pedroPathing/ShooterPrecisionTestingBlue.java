@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -41,8 +42,11 @@ public class ShooterPrecisionTestingBlue extends OpMode
     double hoodPos;
     int tagID = 0;
     double turningPower = 0;
+    double transferPower = 0;
     boolean gamepadImput = false;
     boolean tagImput = false;
+    int transferTicker = 200;
+    boolean transferTickerCheck = false;
 
 
     @Override
@@ -85,7 +89,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setDirection(DcMotor.Direction.REVERSE);
+        shooter.setDirection(DcMotor.Direction.FORWARD);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
         intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
@@ -103,7 +107,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.4);
+        blocker.setPosition(0.5);
 
 
         telemetry.addData("status", "Initialized");
@@ -178,16 +182,16 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0.18);
+            blocker.setPosition(0);
             hood.setPosition(0.24);
             shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0.2);
-            shooterVelocity = 1250;
+            blocker.setPosition(0);
+            shooterVelocity = 1100;
         }
         else {
-            blocker.setPosition(0.4);
+            blocker.setPosition(0.5);
             hood.setPosition(0.05);
             shooterVelocity = 800;
         }
@@ -199,25 +203,38 @@ public class ShooterPrecisionTestingBlue extends OpMode
             anyImput = true;
         }
         if (gamepad2.left_bumper) {
-            intakeBack.setPower(1);
+            transferPower = 0;
             priorityImput = true;
             anyImput = true;
         }
         if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
-            intakeBack.setPower(-1);
+            transferPower = 0;
             anyImput = true;
         }
         if (!anyImput) {
             intakeForward.setPower(0);
-            intakeBack.setPower(0);
+            transferPower = 0;
+        }
+
+        if (gamepad2.x && !transferTickerCheck){
+            transferTickerCheck = true;
+            transferTicker = 200;
+        }
+        if (transferTickerCheck){
+            if (transferTicker != 0){
+                transferTicker =- 1;
+                transferPower = 1;
+            }
+            else {
+                transferPower = 0;
+                transferTickerCheck = false;
+            }
         }
 
         // turret code
 
-//        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad2.right_stick_x != 0){
-//            terminateOpModeNow();
-//        }
+
 
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
@@ -294,6 +311,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+        intakeBack.setPower(transferPower);
         shooter.setVelocity(shooterVelocity);
         turret.setPower(turningPower);
 
