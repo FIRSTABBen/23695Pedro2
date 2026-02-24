@@ -181,16 +181,16 @@ public class ShooterPrecisionTestingRed extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0.18);
+            blocker.setPosition(0);
             hood.setPosition(0.24);
             shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0.2);
+            blocker.setPosition(-0.5);
             shooterVelocity = 1100;
         }
         else {
-            blocker.setPosition(0.4);
+            blocker.setPosition(0.5);
             hood.setPosition(0.05);
             shooterVelocity = 800;
         }
