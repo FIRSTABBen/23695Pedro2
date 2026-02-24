@@ -182,8 +182,10 @@ public class SimpleDrive extends OpMode
         rightBackDrive.setPower(rightBackPower);
         shooter.setVelocity(shooterVelocity);
         if (gamepad1.a) {
+            blocker.setPosition(1);
             hood.setPosition(0.05);
         } else if (gamepad1.b) {
+            blocker.setPosition(0);
             hood.setPosition(0.2);
         }
         //Claw Code: Opens with GP2 X and opens less when past vertical position
