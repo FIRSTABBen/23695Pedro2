@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -88,7 +89,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setDirection(DcMotor.Direction.REVERSE);
+        shooter.setDirection(DcMotor.Direction.FORWARD);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
         intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
@@ -106,7 +107,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.4);
+        blocker.setPosition(0.5);
 
 
         telemetry.addData("status", "Initialized");
@@ -186,7 +187,7 @@ public class ShooterPrecisionTestingRed extends OpMode
             shooterVelocity = 1850;
         } else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(-0.5);
+            blocker.setPosition(0);
             shooterVelocity = 1100;
         }
         else {
@@ -233,9 +234,7 @@ public class ShooterPrecisionTestingRed extends OpMode
 
         // turret code
 
-        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad1.right_stick_y != 0){
-            terminateOpModeNow();
-        }
+
 
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
