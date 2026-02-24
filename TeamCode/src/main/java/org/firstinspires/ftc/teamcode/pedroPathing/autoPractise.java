@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import static android.os.SystemClock.sleep;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -7,7 +9,10 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous
@@ -16,6 +21,12 @@ public class autoPractise extends OpMode {
     private Follower follower;
 
     private Timer pathTimer, opModeTimer;
+
+    private DcMotorEx shooter = null;
+    private DcMotor intakeForward = null;
+    private DcMotor intakeBack =null;
+    private Servo hood = null;
+    private Servo blocker = null;
 
     private enum Pathstate{
         PATH1, PATH2, PATH3, PATH4, PATH5, PATH6, PATH7, PATH8, PATH9, PATH10, PATH11
@@ -49,27 +60,45 @@ public class autoPractise extends OpMode {
     private PathChain path9;
     private PathChain path10;
     private PathChain path11;
+
+private void shoot(){
+    intakeBack.setPower(1);
+    intakeForward.setPower(1);
+    //blocker.setPosition(0);
+    sleep(3000);
+    intakeBack.setPower(0);
+    intakeForward.setPower(0);
+}
 public void statePathUpdate() {
+    shooter.setVelocity(1850);
+    //1100 for close
+    hood.setPosition(0.24);
+    //0.12 for close
         switch (pathState) {
             case PATH1:
+                shoot();
                 follower.followPath(path1, true);
                 setPathState(Pathstate.PATH2);
-
                 break;
             case PATH2:
                 if (!follower.isBusy()) {
+                    intakeBack.setPower(1);
+                    intakeForward.setPower(1);
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
+
                     setPathState(Pathstate.PATH3);
                 }
                 break;
             case PATH3:
                 if (!follower.isBusy()) {
+                    shoot();
                     telemetry.addLine("done Path2");
                     follower.followPath(path3, true);
                     setPathState(Pathstate.PATH4);
                 }
                 break;
+                //shoot
             case PATH4:
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
@@ -79,6 +108,8 @@ public void statePathUpdate() {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
+                    intakeBack.setPower(1);
+                    intakeForward.setPower(1);
                     telemetry.addLine("done Path4");
                     follower.followPath(path5, true);
                     setPathState(Pathstate.PATH6);
@@ -86,6 +117,8 @@ public void statePathUpdate() {
                 break;
             case PATH6:
                 if (!follower.isBusy()) {
+                    intakeBack.setPower(0);
+                    intakeForward.setPower(0);
                     telemetry.addLine("done Path5");
                     follower.followPath(path6, true);
                     setPathState(Pathstate.PATH7);
@@ -93,11 +126,13 @@ public void statePathUpdate() {
                 break;
             case PATH7:
                 if (!follower.isBusy()) {
+                    shoot();
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
                     setPathState(Pathstate.PATH8);
                 }
                 break;
+                //shoot
             case PATH8:
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path7");
@@ -114,20 +149,22 @@ public void statePathUpdate() {
                 break;
             case PATH10:
                 if (!follower.isBusy()) {
+                    shoot();
                     telemetry.addLine("done Path9");
                     follower.followPath(path10, true);
                     setPathState(Pathstate.PATH11);
                 }
                 break;
+                //shoot
             case PATH11:
                 if (!follower.isBusy()) {
-                    telemetry.addLine("done Path9");
+                    telemetry.addLine("done Path10");
                     follower.followPath(path11, true);
-                    terminateOpModeNow();
                 }
                 break;
             default:
                 telemetry.addLine("no state");
+                terminateOpModeNow();
                 break;
 
         }
@@ -194,8 +231,22 @@ public void setPathState(Pathstate newState) {
         opModeTimer.resetTimer();
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
-
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
+        intakeForward = hardwareMap.get(DcMotor.class, "intakeForward");
+        intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
+        hood = hardwareMap.get(Servo.class, "hood");
+        blocker = hardwareMap.get(Servo.class, "blocker");
         follower.setPose(startPose);
+
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeForward.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        shooter.setDirection(DcMotor.Direction.REVERSE);
+        intakeForward.setDirection(DcMotor.Direction.FORWARD);
+        intakeBack.setDirection(DcMotor.Direction.FORWARD);
+        hood.setDirection(Servo.Direction.FORWARD);
+        blocker.setDirection(Servo.Direction.FORWARD);
 
     }
 
