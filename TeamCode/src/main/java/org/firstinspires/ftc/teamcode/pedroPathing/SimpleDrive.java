@@ -152,14 +152,14 @@ public class SimpleDrive extends OpMode
             turret.setPower(0);
         }
         // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad1.y && shooterVelocity != 0) {
+//            if (blockerPowerControl && gamepad1.y && shooterVelocity != 0) {
 //                shooterVelocity += 280;
-//                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad1.a && shooterVelocity != 2800) {
+//                blockerPowerControl = false;
+//            } else if (blockerPowerControl && gamepad1.a && shooterVelocity != 2800) {
 //                shooterVelocity -= 280;
-//                shooterPowerControl = false;
+//                blockerPowerControl = false;
 //            } else if (!gamepad1.a && !gamepad1.y) {
-//                shooterPowerControl = true;
+//                blockerPowerControl = true;
 //            }
         // self destruct button
         if ((gamepad1.a && gamepad1.b && gamepad1.x && gamepad1.y) || (gamepad2.a && gamepad2.b && gamepad2.x && gamepad2.y)) {
