@@ -270,14 +270,14 @@ public class ShooterPrecisionTestingRed extends OpMode
 
 
 //        // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 2800) {
+//            if (blockerPowerControl && gamepad2.y && shooterVelocity != 2800) {
 //                shooterVelocity += 100;
-//                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad2.x && shooterVelocity != 0) {
+//                blockerPowerControl = false;
+//            } else if (blockerPowerControl && gamepad2.x && shooterVelocity != 0) {
 //                shooterVelocity -= 100;
-//                shooterPowerControl = false;
+//                blockerPowerControl = false;
 //            } else if (!gamepad2.x && !gamepad2.y) {
-//                shooterPowerControl = true;
+//                blockerPowerControl = true;
 //            }
         // self destruct button
         if ((gamepad1.a && gamepad1.b && gamepad1.x && gamepad1.y) || (gamepad2.a && gamepad2.b && gamepad2.x && gamepad2.y)) {

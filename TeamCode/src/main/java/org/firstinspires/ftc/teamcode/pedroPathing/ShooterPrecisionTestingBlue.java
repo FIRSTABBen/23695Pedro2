@@ -93,7 +93,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
         intakeBack.setDirection(DcMotor.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
-        hood.setDirection(Servo.Direction.FORWARD);
+        hood.setDirection(Servo.Direction.REVERSE);
         blocker.setDirection(Servo.Direction.FORWARD);
 
 
@@ -107,7 +107,8 @@ public class ShooterPrecisionTestingBlue extends OpMode
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.5);
+        blocker.setPosition(0);
+        shooterVelocity = 800;
 
 
         telemetry.addData("status", "Initialized");
@@ -181,19 +182,23 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
 
         // shooter controls
-        if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0);
+        if (gamepad2.a) {
+            blocker.setPosition(0.33);
             hood.setPosition(0.24);
-            shooterVelocity = 1850;
-        } else if (gamepad2.right_bumper) {
+            shooterVelocity = -800;
+            telemetry.addLine("far power");
+        }
+        else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0);
-            shooterVelocity = 1100;
+            blocker.setPosition(0.33);
+            shooterVelocity = -800;
+            telemetry.addLine("close power");
         }
         else {
-            blocker.setPosition(0.5);
+            blocker.setPosition(0);
             hood.setPosition(0.05);
-            shooterVelocity = 800;
+           // shooterVelocity = -800;
+            telemetry.addLine("no power");
         }
 
         // intake and transfer controls
@@ -242,7 +247,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         else {
             turningPower = 0;
         }
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepad2.dpad_up) {
             if (ta < 0.5){
                 if (tx < -6 || tx > 0){
                     turningPower = (tx / 32.5);
@@ -270,14 +275,14 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
 
 //        // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 2800) {
+//            if (blockerPowerControl && gamepad2.y && shooterVelocity != 2800) {
 //                shooterVelocity += 100;
-//                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad2.x && shooterVelocity != 0) {
+//                blockerPowerControl = false;
+//            } else if (blockerPowerControl && gamepad2.x && shooterVelocity != 0) {
 //                shooterVelocity -= 100;
-//                shooterPowerControl = false;
+//                blockerPowerControl = false;
 //            } else if (!gamepad2.x && !gamepad2.y) {
-//                shooterPowerControl = true;
+//                blockerPowerControl = true;
 //            }
         // self destruct button
         if ((gamepad1.a && gamepad1.b && gamepad1.x && gamepad1.y) || (gamepad2.a && gamepad2.b && gamepad2.x && gamepad2.y)) {
@@ -327,6 +332,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
         //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
+        telemetry.addData("ransfer tick ", transferTicker);
         telemetry.addData("", limelight_telemetry);
         if (llResult != null && llResult.isValid()) {
             tagseen = "true";
