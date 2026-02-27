@@ -72,10 +72,10 @@ public class bigTriangle extends OpMode {
         blocker.setPosition(0);
     }
     public void statePathUpdate() {
-        shooter.setVelocity(1850);
+        shooter.setVelocity(1100);
 
         //1100 for close
-        hood.setPosition(0.24);
+        hood.setPosition(0.12);
         //0.12 for close
         switch (pathState) {
             case PATH1:

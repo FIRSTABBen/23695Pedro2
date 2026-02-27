@@ -35,7 +35,6 @@ public class autoPractise extends OpMode {
 
     Pathstate pathState;
 
-    //"x,y,heading in radians(yuck)"
     private final Pose startPose = new Pose(56,8, Math.toRadians(180));
     private final Pose movePose1 = new Pose(45, 32, Math.toRadians(180));
     private final Pose movePose2 = new Pose(15,32, Math.toRadians(180));
