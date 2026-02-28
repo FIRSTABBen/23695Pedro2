@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+//import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -37,14 +36,14 @@ public class ShooterPrecisionTestingBlue extends OpMode
     private IMU imu; //emu
 
     double shooterVelocity = 0;
-    boolean shooterPowerControl = true;
-    boolean hoodController = true;
-    double hoodPos;
+//    boolean shooterPowerControl = true;
+//    boolean hoodController = true;
+//    double hoodPos;
     int tagID = 0;
     double turningPower = 0;
     double transferPower = 0;
-    boolean gamepadImput = false;
-    boolean tagImput = false;
+//    boolean gamepadImput = false;
+//    boolean tagImput = false;
     int transferTicker = 200;
     boolean transferTickerCheck = false;
 
@@ -68,10 +67,10 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(2);
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
-        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
+//        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
 
         //other motor initializing
 
@@ -108,7 +107,6 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         hood.setPosition(0.27);
         blocker.setPosition(0);
-        shooterVelocity = 800;
 
 
         telemetry.addData("status", "Initialized");
@@ -118,12 +116,12 @@ public class ShooterPrecisionTestingBlue extends OpMode
     //Set variables//
     @Override
     public void loop() {
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        limelight.updateRobotOrientation(orientation.getYaw());
+//        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+//        limelight.updateRobotOrientation(orientation.getYaw());
         LLResult llResult = limelight.getLatestResult();
-        if (llResult != null && llResult.isValid()) {
-            Pose3D botPose =llResult.getBotpose_MT2();
-        }
+//        if (llResult != null && llResult.isValid()) {
+//            Pose3D botPose =llResult.getBotpose_MT2();
+//        }
 
         // drive variables
         double leftFrontPower;
@@ -183,21 +181,21 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         // shooter controls
         if (gamepad2.a) {
-            blocker.setPosition(0.33);
+            blocker.setPosition(0.5);
             hood.setPosition(0.24);
-            shooterVelocity = -800;
+            shooterVelocity = 1850;
             telemetry.addLine("far power");
         }
         else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0.33);
-            shooterVelocity = -800;
+            blocker.setPosition(0.5);
+            shooterVelocity = 1100;
             telemetry.addLine("close power");
         }
         else {
             blocker.setPosition(0);
             hood.setPosition(0.05);
-           // shooterVelocity = -800;
+            shooterVelocity = 800;
             telemetry.addLine("no power");
         }
 
@@ -227,8 +225,8 @@ public class ShooterPrecisionTestingBlue extends OpMode
             transferTicker = 200;
         }
         if (transferTickerCheck){
-            if (transferTicker != 0){
-                transferTicker =- 1;
+            if (transferTicker > 0){
+                transferTicker = (transferTicker - 1);
                 transferPower = 1;
             }
             else {

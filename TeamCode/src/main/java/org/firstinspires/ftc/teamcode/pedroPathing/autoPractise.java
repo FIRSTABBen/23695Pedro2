@@ -63,7 +63,7 @@ public class autoPractise extends OpMode {
 private void shoot(){
     intakeBack.setPower(1);
     intakeForward.setPower(1);
-    blocker.setPosition(0);
+    blocker.setPosition(0.5);
     sleep(2000);
     intakeBack.setPower(0);
     intakeForward.setPower(0);

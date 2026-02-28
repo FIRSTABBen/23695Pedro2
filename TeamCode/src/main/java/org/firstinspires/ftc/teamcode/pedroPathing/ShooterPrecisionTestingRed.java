@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+//import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -37,14 +36,14 @@ public class ShooterPrecisionTestingRed extends OpMode
     private IMU imu; //emu
 
     double shooterVelocity = 0;
-    boolean shooterPowerControl = true;
-    boolean hoodController = true;
-    double hoodPos;
+    //    boolean shooterPowerControl = true;
+//    boolean hoodController = true;
+//    double hoodPos;
     int tagID = 0;
     double turningPower = 0;
     double transferPower = 0;
-    boolean gamepadImput = false;
-    boolean tagImput = false;
+    //    boolean gamepadImput = false;
+//    boolean tagImput = false;
     int transferTicker = 200;
     boolean transferTickerCheck = false;
 
@@ -68,12 +67,13 @@ public class ShooterPrecisionTestingRed extends OpMode
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.pipelineSwitch(0);
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
-        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+//        imu = hardwareMap.get(IMU.class, "imu");
+//        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
+//                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
+//        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
 
         //other motor initializing
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -106,8 +106,9 @@ public class ShooterPrecisionTestingRed extends OpMode
         intakeBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
         hood.setPosition(0.27);
-        blocker.setPosition(0.5);
+        blocker.setPosition(0);
 
 
         telemetry.addData("status", "Initialized");
@@ -117,12 +118,12 @@ public class ShooterPrecisionTestingRed extends OpMode
     //Set variables//
     @Override
     public void loop() {
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        limelight.updateRobotOrientation(orientation.getYaw());
+//        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+//        limelight.updateRobotOrientation(orientation.getYaw());
         LLResult llResult = limelight.getLatestResult();
-        if (llResult != null && llResult.isValid()) {
-            Pose3D botPose =llResult.getBotpose_MT2();
-        }
+//        if (llResult != null && llResult.isValid()) {
+//            Pose3D botPose =llResult.getBotpose_MT2();
+//        }
 
         // drive variables
         double leftFrontPower;
@@ -181,19 +182,23 @@ public class ShooterPrecisionTestingRed extends OpMode
 
 
         // shooter controls
-        if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0);
+        if (gamepad2.a) {
+            blocker.setPosition(0.5);
             hood.setPosition(0.24);
             shooterVelocity = 1850;
-        } else if (gamepad2.right_bumper) {
+            telemetry.addLine("far power");
+        }
+        else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0);
+            blocker.setPosition(0.5);
             shooterVelocity = 1100;
+            telemetry.addLine("close power");
         }
         else {
-            blocker.setPosition(0.5);
+            blocker.setPosition(0);
             hood.setPosition(0.05);
             shooterVelocity = 800;
+            telemetry.addLine("no power");
         }
 
         // intake and transfer controls
@@ -222,8 +227,8 @@ public class ShooterPrecisionTestingRed extends OpMode
             transferTicker = 200;
         }
         if (transferTickerCheck){
-            if (transferTicker != 0){
-                transferTicker =- 1;
+            if (transferTicker > 0){
+                transferTicker = (transferTicker - 1);
                 transferPower = 1;
             }
             else {
@@ -242,9 +247,9 @@ public class ShooterPrecisionTestingRed extends OpMode
         else {
             turningPower = 0;
         }
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && !gamepad2.dpad_up) {
             if (ta < 0.5){
-                if (tx < 0 || tx > 6){
+                if (tx < 0 || tx > -6){
                     turningPower = (tx / 32.5);
                 }
                 else {
@@ -326,7 +331,9 @@ public class ShooterPrecisionTestingRed extends OpMode
         telemetry.addData("left rear motor expected", "power = %.2f", leftBackPower);
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
+        telemetry.addData("shooter expected velocity", "expected velocity = %.2f", shooterVelocity);
         //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
+        telemetry.addData("transfer tick ", transferTicker);
         telemetry.addData("", limelight_telemetry);
         if (llResult != null && llResult.isValid()) {
             tagseen = "true";
