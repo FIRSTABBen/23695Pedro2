@@ -68,7 +68,7 @@ private void shoot(){
     sleep(2000);
     intakeBack.setPower(0);
     intakeForward.setPower(0);
-    blocker.setPosition(0);
+    blocker.setPosition(0.05);
 }
 public void statePathUpdate() {
     shooter.setVelocity(-1850);

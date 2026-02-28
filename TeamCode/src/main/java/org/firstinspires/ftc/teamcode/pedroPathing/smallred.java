@@ -61,13 +61,14 @@ public class smallred extends OpMode {
     private PathChain path11;
 
     private void shoot(){
+        blocker.setPosition(0.5);
+        sleep(500);
         intakeBack.setPower(1);
         intakeForward.setPower(1);
-        blocker.setPosition(0.5);
         sleep(2000);
         intakeBack.setPower(0);
         intakeForward.setPower(0);
-        blocker.setPosition(0);
+        blocker.setPosition(0.05);
     }
     public void statePathUpdate() {
         shooter.setVelocity(-1850);
