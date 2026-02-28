@@ -181,14 +181,14 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         // shooter controls
         if (gamepad2.a) {
-            blocker.setPosition(0.5);
-            hood.setPosition(0.30);
+            blocker.setPosition(0.6);
+            hood.setPosition(0.25);
             shooterVelocity = -1850;
             telemetry.addLine("far power");
         }
         else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0.5);
+            blocker.setPosition(0.6);
             shooterVelocity = -1100;
             telemetry.addLine("close power");
         }
@@ -206,7 +206,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
             anyImput = true;
         }
         if (gamepad2.left_bumper) {
-            transferPower = 0;
+            transferPower = 1;
             priorityImput = true;
             anyImput = true;
         }
@@ -222,14 +222,14 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         if (gamepad2.x && !transferTickerCheck){
             transferTickerCheck = true;
-            transferTicker = 200;
+            transferTicker = 100;
         }
         if (transferTickerCheck){
             if (transferTicker > 0){
                 transferTicker = (transferTicker - 1);
                 transferPower = 1;
             }
-            else {
+            else if (!anyImput){
                 transferPower = 0;
                 transferTickerCheck = false;
             }
@@ -329,9 +329,9 @@ public class ShooterPrecisionTestingBlue extends OpMode
         telemetry.addData("left rear motor expected", "power = %.2f", leftBackPower);
         telemetry.addData("right rear motor expected", "power = %.2f", rightBackPower);
         telemetry.addData("shooter velocity", "velocity = %.2f", shooter.getVelocity());
-        telemetry.addData("Expected Shooter Velocity", shooterVelocity);
+        telemetry.addData("Expected Shooter Velocity = ", shooterVelocity);
         //telemetry.addData("turret pos", "pos= %.2f", turret.getCurrentPosition());
-        telemetry.addData("ransfer tick ", transferTicker);
+        telemetry.addData("transfer tick ", transferTicker);
         telemetry.addData("", limelight_telemetry);
         if (llResult != null && llResult.isValid()) {
             tagseen = "true";
