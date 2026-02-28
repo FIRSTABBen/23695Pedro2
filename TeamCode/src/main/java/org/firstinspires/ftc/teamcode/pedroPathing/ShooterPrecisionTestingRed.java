@@ -184,20 +184,20 @@ public class ShooterPrecisionTestingRed extends OpMode
         // shooter controls
         if (gamepad2.a) {
             blocker.setPosition(0.5);
-            hood.setPosition(0.24);
-            shooterVelocity = 1850;
+            hood.setPosition(0.30);
+            shooterVelocity = -1850;
             telemetry.addLine("far power");
         }
         else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
             blocker.setPosition(0.5);
-            shooterVelocity = 1100;
+            shooterVelocity = -1100;
             telemetry.addLine("close power");
         }
         else {
             blocker.setPosition(0);
             hood.setPosition(0.05);
-            shooterVelocity = 800;
+            shooterVelocity = -800;
             telemetry.addLine("no power");
         }
 

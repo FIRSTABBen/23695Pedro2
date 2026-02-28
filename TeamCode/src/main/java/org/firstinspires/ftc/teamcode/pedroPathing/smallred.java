@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous
-public class autoPractise extends OpMode {
+public class smallred extends OpMode {
 
     private Follower follower;
 
@@ -35,15 +35,15 @@ public class autoPractise extends OpMode {
 
     Pathstate pathState;
 
-    private final Pose startPose = new Pose(56,8, Math.toRadians(180));
-    private final Pose movePose1 = new Pose(45, 32, Math.toRadians(180));
-    private final Pose movePose2 = new Pose(15,32, Math.toRadians(180));
-    private final Pose movePose3 = new Pose(56,27, Math.toRadians(270));
-    private final Pose movePose4 = new Pose(8, 28, Math.toRadians(270));
-    private final Pose movePose5 = new Pose(8, 10, Math.toRadians(270));
-    private final Pose movePose6 = new Pose(56, 20, Math.toRadians(90));
-    private final Pose movePose7 = new Pose(56,8, Math.toRadians(90));
-    private final Pose finalPose = new Pose(56, 20, Math.toRadians(90));
+    private final Pose startPose = new Pose(88,8, Math.toRadians(-180));
+    private final Pose movePose1 = new Pose(99, 32, Math.toRadians(-180));
+    private final Pose movePose2 = new Pose(129,32, Math.toRadians(-180));
+    private final Pose movePose3 = new Pose(88,27, Math.toRadians(270));
+    private final Pose movePose4 = new Pose(136, 28, Math.toRadians(270));
+    private final Pose movePose5 = new Pose(136, 10, Math.toRadians(270));
+    private final Pose movePose6 = new Pose(88, 20, Math.toRadians(90));
+    private final Pose movePose7 = new Pose(88,8, Math.toRadians(90));
+    private final Pose finalPose = new Pose(88, 20, Math.toRadians(90));
 
 
     //alice in pathChains\/
@@ -60,25 +60,24 @@ public class autoPractise extends OpMode {
     private PathChain path10;
     private PathChain path11;
 
-private void shoot(){
-    blocker.setPosition(0.5);
-    sleep(500);
-    intakeBack.setPower(1);
-    intakeForward.setPower(1);
-    sleep(2000);
-    intakeBack.setPower(0);
-    intakeForward.setPower(0);
-    blocker.setPosition(0);
-}
-public void statePathUpdate() {
-    shooter.setVelocity(-1850);
+    private void shoot(){
+        intakeBack.setPower(1);
+        intakeForward.setPower(1);
+        blocker.setPosition(0.5);
+        sleep(2000);
+        intakeBack.setPower(0);
+        intakeForward.setPower(0);
+        blocker.setPosition(0);
+    }
+    public void statePathUpdate() {
+        shooter.setVelocity(-1850);
 
-    //1100 for close
-    hood.setPosition(0.25);
-    //0.12 for close
+        //1100 for close
+        hood.setPosition(0.30);
+        //0.12 for close
         switch (pathState) {
             case PATH1:
-                sleep(3500);
+                sleep(1000);
                 shoot();
                 follower.followPath(path1, true);
                 setPathState(Pathstate.PATH2);
@@ -101,7 +100,7 @@ public void statePathUpdate() {
                     setPathState(Pathstate.PATH4);
                 }
                 break;
-                //shoot
+            //shoot
             case PATH4:
                 if (!follower.isBusy()) {
                     shoot();
@@ -129,6 +128,8 @@ public void statePathUpdate() {
                 break;
             case PATH7:
                 if (!follower.isBusy()) {
+                    intakeBack.setPower(0);
+                    intakeForward.setPower(0);
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
                     setPathState(Pathstate.PATH8);
@@ -149,13 +150,13 @@ public void statePathUpdate() {
 
         }
 
-}
+    }
 
-public void setPathState(Pathstate newState) {
-    pathState = newState;
-    pathTimer.resetTimer();
+    public void setPathState(Pathstate newState) {
+        pathState = newState;
+        pathTimer.resetTimer();
 
-}
+    }
     public void buildPaths() {
         path1 = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, movePose1))
@@ -247,3 +248,4 @@ public void setPathState(Pathstate newState) {
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
     }
 }
+
