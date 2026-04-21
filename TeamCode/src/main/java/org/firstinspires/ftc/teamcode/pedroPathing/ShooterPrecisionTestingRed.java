@@ -73,7 +73,6 @@ public class ShooterPrecisionTestingRed extends OpMode
 //        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
 
         //other motor initializing
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -184,7 +183,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         // shooter controls
         if (gamepad2.a) {
             blocker.setPosition(0.5);
-            hood.setPosition(0.30);
+            hood.setPosition(0.25);
             shooterVelocity = -1850;
             telemetry.addLine("far power");
         }
