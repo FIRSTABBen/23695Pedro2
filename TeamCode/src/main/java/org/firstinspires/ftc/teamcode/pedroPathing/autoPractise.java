@@ -13,6 +13,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+
+import java.util.List;
 
 
 @Autonomous
@@ -25,8 +30,16 @@ public class autoPractise extends OpMode {
     private DcMotorEx shooter = null;
     private DcMotor intakeForward = null;
     private DcMotor intakeBack =null;
+    private DcMotor turret = null;
     private Servo hood = null;
     private Servo blocker = null;
+
+    private Limelight3A limelight = null;
+
+
+    double turningPower = 0;
+    int tagID = 0;
+    boolean target = false;
 
     private enum Pathstate{
         PATH1, PATH2, PATH3, PATH4, PATH5, PATH6, PATH7, PATH8, PATH9, PATH10, PATH11
@@ -61,7 +74,7 @@ public class autoPractise extends OpMode {
     private PathChain path11;
 
 private void shoot(){
-    blocker.setPosition(0.5);
+    blocker.setPosition(0.6);
     sleep(500);
     intakeBack.setPower(1);
     intakeForward.setPower(1);
@@ -70,8 +83,10 @@ private void shoot(){
     intakeForward.setPower(0);
     blocker.setPosition(0.05);
 }
+
 public void statePathUpdate() {
     shooter.setVelocity(-1850);
+    target = false;
 
     //1100 for close
     hood.setPosition(0.25);
@@ -216,17 +231,23 @@ public void setPathState(Pathstate newState) {
         intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
         hood = hardwareMap.get(Servo.class, "hood");
         blocker = hardwareMap.get(Servo.class, "blocker");
+        turret = hardwareMap.get(DcMotor.class, "turret");
         follower.setPose(startPose);
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(2);
+
 
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeForward.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         shooter.setDirection(DcMotor.Direction.FORWARD);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
         intakeBack.setDirection(DcMotor.Direction.FORWARD);
         hood.setDirection(Servo.Direction.FORWARD);
         blocker.setDirection(Servo.Direction.FORWARD);
+        turret.setDirection(DcMotor.Direction.FORWARD);
 
     }
 
@@ -236,8 +257,64 @@ public void setPathState(Pathstate newState) {
 
     }
     public void loop(){
-        follower.update();
-        statePathUpdate();
+
+        limelight.start();
+        limelight.setPollRateHz(90);
+        LLResult result = limelight.getLatestResult();
+        double tx = result.getTx();
+        double ta = result.getTa();
+        String tagseen = " ";
+        String limelight_telemetry = "Limelight Data";
+        int pipeline = result.getPipelineIndex();
+
+        if (result.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                tagID = fr.getFiducialId();
+            }
+        } else {
+            tagID = 0;
+            target = true;
+        }
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid()))) {
+            if (ta < 0.5) {
+                if (tx < 0 || tx > 6) {    //red, -6 and 0 for blue
+                    turningPower = (tx / 32.5);
+                } else {
+                    turningPower = 0;
+                    target = true;
+                }
+            } else if (ta > 0.5) {
+                if (tx < -3 || tx > 3) {
+                    turningPower = (tx / 32.5);
+                } else if (tx < -7 || tx > 7) {
+                    turningPower = (tx / 40);
+                } else {
+                    turningPower = 0;
+                    target = true;
+                }
+            }
+        }
+
+
+        long staleness = result.getStaleness();
+        if (staleness < 100) {
+            telemetry.addData("data", "good");
+        } else {
+            telemetry.addData("data", "bad (" + staleness + " ms)");
+        }
+        if (result != null && result.isValid()) {
+            tagseen = "true";
+        } else {
+            tagseen = "false";
+        }
+        telemetry.addData("tagSeen ", tagseen);
+        telemetry.addData("limelight x = ", tx);
+        telemetry.addData("limelight a = ", ta);
+        telemetry.addData("limelight pipeline = ", pipeline);
+        telemetry.addData("tag ", "ID: %d", tagID);
+        telemetry.update();
+        turret.setPower(turningPower);
 
 
         telemetry.addData("path state", pathState.toString());
@@ -245,5 +322,10 @@ public void setPathState(Pathstate newState) {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
+        follower.update();
+        statePathUpdate();
+
+
+
     }
 }
