@@ -28,23 +28,24 @@ public class bigTriangle extends OpMode {
     private Servo blocker = null;
 
     private enum Pathstate{
-        PATH1, PATH2, PATH3, PATH4, PATH5, PATH6, PATH7, PATH8, PATH9, PATH10, PATH11
+        PATH1, PATH2, PATH3, PATH4, PATH5, PATH6, PATH7, PATH8, PATH9, PATH10, PATH11,
+        SHOOT1, SHOOT2, SHOOT3, SHOOT4, SHOOT5
         //SPOS EPOS
     }
 
     Pathstate pathState;
 
-    //"x,y,heading in radians(yuck)"
-    private final Pose startPose = new Pose(56,8, Math.toRadians(180));
-    private final Pose movePose1 = new Pose(21, 123, Math.toRadians(180));
-    private final Pose movePose2 = new Pose(30,115, Math.toRadians(180));
-    private final Pose movePose3 = new Pose(43,84, Math.toRadians(180));
-    private final Pose movePose4 = new Pose(15, 84, Math.toRadians(180));
-    private final Pose movePose5 = new Pose(29, 115, Math.toRadians(180));
-    private final Pose movePose6 = new Pose(44, 58, Math.toRadians(180));
-    private final Pose movePose7 = new Pose(14,58, Math.toRadians(180));
-    private final Pose movePose8 = new Pose(29, 114, Math.toRadians(180));
-    private final Pose movePose9 = new Pose(19,105, Math.toRadians(180));
+
+    private final Pose movePose1 = new Pose(56,8, Math.toRadians(180));
+    private final Pose movePose2 = new Pose(56,36, Math.toRadians(180));
+    private final Pose movePose3 = new Pose(15,36, Math.toRadians(180));
+    private final Pose movePose4 = new Pose(56,8, Math.toRadians(180));
+    private final Pose movePose5 = new Pose(8,30, Math.toRadians(180));
+    private final Pose movePose6 = new Pose(8,8, Math.toRadians(180));
+    private final Pose movePose7 = new Pose(56,8, Math.toRadians(180));
+    private final Pose movePose8 = new Pose(0,0, Math.toRadians(180));
+    private final Pose movePose9 = new Pose(0,0, Math.toRadians(180));
+    private final Pose movePose10 = new Pose(0,0, Math.toRadians(180));
 
 
     //alice in pathChains\/
@@ -78,99 +79,104 @@ public class bigTriangle extends OpMode {
         hood.setPosition(0.24);
         //0.12 for close
         switch (pathState) {
-            case PATH1:
+            case SHOOT1:
                 sleep(3000);
                 shoot();
-                follower.followPath(path1, true);
-                setPathState(Pathstate.PATH2);
                 break;
-            case PATH2:
+            case PATH1:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(1);
                     intakeForward.setPower(1);
+                    follower.followPath(path1, true);
                     telemetry.addLine("done Path1");
-                    follower.followPath(path2, true);
-                    setPathState(Pathstate.PATH3);
+                    setPathState(Pathstate.PATH2);
+
                 }
                 break;
-            case PATH3:
+            case PATH2:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(0);
                     intakeForward.setPower(0);
+                    telemetry.addLine("start Path2");
+                    follower.followPath(path2, true);
                     telemetry.addLine("done Path2");
-                    follower.followPath(path3, true);
-                    setPathState(Pathstate.PATH4);
+                    setPathState(Pathstate.PATH3);
                 }
                 break;
             //shoot
+            case PATH3:
+                if (!follower.isBusy()) {
+                    telemetry.addLine("start Path3");
+                    follower.followPath(path3, true);
+                    telemetry.addLine("done Path3");
+                    setPathState(Pathstate.PATH5);
+                }
+                break;
             case PATH4:
                 if (!follower.isBusy()) {
-                    shoot();
-                    telemetry.addLine("done Path3");
+                    telemetry.addLine("start Path4");
                     follower.followPath(path4, true);
+                    telemetry.addLine("done Path4");
                     setPathState(Pathstate.PATH5);
                 }
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
-
-                    telemetry.addLine("done Path4");
+                    intakeBack.setPower(1);
+                    intakeForward.setPower(1);
+                    telemetry.addLine("start Path5");
                     follower.followPath(path5, true);
+                    telemetry.addLine("done Path5");
                     setPathState(Pathstate.PATH6);
                 }
                 break;
             case PATH6:
                 if (!follower.isBusy()) {
-                    intakeBack.setPower(1);
-                    intakeForward.setPower(1);
-                    telemetry.addLine("done Path5");
+                    intakeBack.setPower(0);
+                    intakeForward.setPower(0);
+                    telemetry.addLine("start Path6");
                     follower.followPath(path6, true);
+                    telemetry.addLine("done Path6");
                     setPathState(Pathstate.PATH7);
                 }
                 break;
             case PATH7:
                 if (!follower.isBusy()) {
-                    intakeBack.setPower(0);
-                    intakeForward.setPower(0);
-                    telemetry.addLine("done Path6");
+                    telemetry.addLine("start Path7");
                     follower.followPath(path7, true);
+                    telemetry.addLine("done Path7");
                     setPathState(Pathstate.PATH8);
                 }
                 break;
             case PATH8:
                 if (!follower.isBusy()) {
                     shoot();
-                    telemetry.addLine("done Path7");
+                    telemetry.addLine("start Path8");
                     follower.followPath(path8, true);
+                    telemetry.addLine("done Path8");
                     setPathState(Pathstate.PATH9);
                 }
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
                     shoot();
-                    telemetry.addLine("done Path7");
+                    telemetry.addLine("start Path9");
                     follower.followPath(path9, true);
+                    telemetry.addLine("done Path9");
                     setPathState(Pathstate.PATH10);
                 }
                 break;
             case PATH10:
                 if (!follower.isBusy()) {
                     shoot();
-                    telemetry.addLine("done Path7");
-                    follower.followPath(path10, true);
-                    setPathState(Pathstate.PATH11);
-                }
-                break;
-            case PATH11:
-                if (!follower.isBusy()) {
-                    shoot();
-                    telemetry.addLine("done Path7");
+                    telemetry.addLine("start Path10");
                     follower.followPath(path11, true);
+                    telemetry.addLine("done Path10");
                     setPathState(Pathstate.PATH11);
                 }
                 break;
             default:
-                telemetry.addLine("no state");
+                telemetry.addLine("Code done YAY!");
                 terminateOpModeNow();
                 break;
 
@@ -185,8 +191,8 @@ public class bigTriangle extends OpMode {
     }
     public void buildPaths() {
         path1 = follower.pathBuilder()
-                .addPath(new BezierLine(startPose, movePose1))
-                .setLinearHeadingInterpolation(startPose.getHeading(), movePose1.getHeading())
+                .addPath(new BezierLine(movePose1, movePose2))
+                .setLinearHeadingInterpolation(movePose2.getHeading(), movePose1.getHeading())
                 .build();
         path2 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose1, movePose2))
@@ -202,27 +208,27 @@ public class bigTriangle extends OpMode {
                 .build();
         path5 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose4, movePose5))
-                .setLinearHeadingInterpolation(movePose3.getHeading(), movePose4.getHeading())
-                .build();
-        path6 = follower.pathBuilder()
-                .addPath(new BezierLine(movePose4, movePose5))
                 .setLinearHeadingInterpolation(movePose4.getHeading(), movePose5.getHeading())
                 .build();
-        path7 = follower.pathBuilder()
+        path6 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose5, movePose6))
                 .setLinearHeadingInterpolation(movePose5.getHeading(), movePose6.getHeading())
                 .build();
-        path8 = follower.pathBuilder()
+        path7 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose6, movePose7))
                 .setLinearHeadingInterpolation(movePose6.getHeading(), movePose7.getHeading())
                 .build();
-        path9 = follower.pathBuilder()
+        path8 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose7, movePose8))
                 .setLinearHeadingInterpolation(movePose7.getHeading(), movePose8.getHeading())
                 .build();
-        path10 = follower.pathBuilder()
+        path9 = follower.pathBuilder()
                 .addPath(new BezierLine(movePose8, movePose9))
                 .setLinearHeadingInterpolation(movePose8.getHeading(), movePose9.getHeading())
+                .build();
+        path10 = follower.pathBuilder()
+                .addPath(new BezierLine(movePose9, movePose10))
+                .setLinearHeadingInterpolation(movePose9.getHeading(), movePose10.getHeading())
                 .build();
 
     }
@@ -240,7 +246,7 @@ public class bigTriangle extends OpMode {
         intakeBack = hardwareMap.get(DcMotor.class, "intakeBack");
         hood = hardwareMap.get(Servo.class, "hood");
         blocker = hardwareMap.get(Servo.class, "blocker");
-        follower.setPose(startPose);
+        follower.setPose(movePose1);
 
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeForward.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
