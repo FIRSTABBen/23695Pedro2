@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -41,11 +42,9 @@ public class ShooterPrecisionTestingRed extends OpMode
     double hoodPos;
     int tagID = 0;
     double turningPower = 0;
-    double transferPower = 0;
     boolean gamepadImput = false;
     boolean tagImput = false;
-    int transferTicker = 200;
-    boolean transferTickerCheck = false;
+    boolean tracking = true;
 
 
     @Override
@@ -90,7 +89,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.REVERSE);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
-        intakeBack.setDirection(DcMotor.Direction.FORWARD);
+        intakeBack.setDirection(DcMotor.Direction.REVERSE);
         turret.setDirection(DcMotor.Direction.FORWARD);
         hood.setDirection(Servo.Direction.FORWARD);
         blocker.setDirection(Servo.Direction.FORWARD);
@@ -182,12 +181,12 @@ public class ShooterPrecisionTestingRed extends OpMode
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
             blocker.setPosition(0.18);
-            hood.setPosition(0.24);
-            shooterVelocity = 1850;
+            hood.setPosition(0.365);
+            shooterVelocity = 2000;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.12);
+            hood.setPosition(0.22);
             blocker.setPosition(0.2);
-            shooterVelocity = 1100;
+            shooterVelocity = 1250;
         }
         else {
             blocker.setPosition(0.4);
@@ -202,40 +201,25 @@ public class ShooterPrecisionTestingRed extends OpMode
             anyImput = true;
         }
         if (gamepad2.left_bumper) {
-            transferPower = 0;
+            intakeBack.setPower(1);
             priorityImput = true;
             anyImput = true;
         }
         if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
-            transferPower = 0;
+            intakeBack.setPower(-1);
             anyImput = true;
         }
         if (!anyImput) {
             intakeForward.setPower(0);
-            transferPower = 0;
-        }
-
-        if (gamepad2.x && !transferTickerCheck){
-            transferTickerCheck = true;
-            transferTicker = 200;
-        }
-        if (transferTickerCheck){
-            if (transferTicker != 0){
-                transferTicker =- 1;
-                transferPower = 1;
-            }
-            else {
-                transferPower = 0;
-                transferTickerCheck = false;
-            }
+            intakeBack.setPower(0);
         }
 
         // turret code
 
-        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad1.right_stick_y != 0){
-            terminateOpModeNow();
-        }
+//        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad2.right_stick_x != 0){
+//            terminateOpModeNow();
+//        }
 
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
@@ -243,9 +227,15 @@ public class ShooterPrecisionTestingRed extends OpMode
         else {
             turningPower = 0;
         }
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
+        if (gamepad2.dpad_left) {
+            tracking = false;
+        }
+        if (gamepad2.dpad_up) {
+            tracking = true;
+        }
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && tracking) {
             if (ta < 0.5){
-                if (tx < 0 || tx > 6){
+                if (tx < 7.5 || tx > 1.5){
                     turningPower = (tx / 32.5);
                 }
                 else {
@@ -312,7 +302,6 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-        intakeBack.setPower(transferPower);
         shooter.setVelocity(shooterVelocity);
         turret.setPower(turningPower);
 
