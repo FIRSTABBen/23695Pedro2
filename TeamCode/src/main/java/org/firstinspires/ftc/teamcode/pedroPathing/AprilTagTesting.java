@@ -39,7 +39,7 @@ public class AprilTagTesting extends OpMode
     private IMU imu; //emu
 
     double shooterVelocity = 0;
-//    boolean shooterPowerControl = true;
+//    boolean blockerPowerControl = true;
 
 
     @Override
@@ -209,14 +209,14 @@ public class AprilTagTesting extends OpMode
 
 
         // old shooter controls, keep commented out for now
-//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 0) {
+//            if (blockerPowerControl && gamepad2.y && shooterVelocity != 0) {
 //                shooterVelocity += 280;
-//                shooterPowerControl = false;
-//            } else if (shooterPowerControl && gamepad2.a && shooterVelocity != 2800) {
+//                blockerPowerControl = false;
+//            } else if (blockerPowerControl && gamepad2.a && shooterVelocity != 2800) {
 //                shooterVelocity -= 280;
-//                shooterPowerControl = false;
+//                blockerPowerControl = false;
 //            } else if (!gamepad2.a && !gamepad2.y) {
-//                shooterPowerControl = true;
+//                blockerPowerControl = true;
 //            }
         // self destruct button
         if ((gamepad1.a && gamepad1.b && gamepad1.x && gamepad1.y) || (gamepad2.a && gamepad2.b && gamepad2.x && gamepad2.y)) {

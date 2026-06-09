@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @Autonomous
-public class autoPractise extends OpMode {
+public class smallred extends OpMode {
 
     private Follower follower;
 
@@ -48,15 +48,15 @@ public class autoPractise extends OpMode {
 
     Pathstate pathState;
 
-    private final Pose startPose = new Pose(56,8, Math.toRadians(180));
-    private final Pose movePose1 = new Pose(45, 32, Math.toRadians(180));
-    private final Pose movePose2 = new Pose(15,32, Math.toRadians(180));
-    private final Pose movePose3 = new Pose(56,27, Math.toRadians(270));
-    private final Pose movePose4 = new Pose(8, 28, Math.toRadians(270));
-    private final Pose movePose5 = new Pose(8, 10, Math.toRadians(270));
-    private final Pose movePose6 = new Pose(56, 20, Math.toRadians(90));
-    private final Pose movePose7 = new Pose(56,8, Math.toRadians(90));
-    private final Pose finalPose = new Pose(56, 20, Math.toRadians(90));
+    private final Pose startPose = new Pose(144-56,8, Math.toRadians(-180));
+    private final Pose movePose1 = new Pose(144-45, 32, Math.toRadians(-180));
+    private final Pose movePose2 = new Pose(144-15,32, Math.toRadians(-180));
+    private final Pose movePose3 = new Pose(144-56,27, Math.toRadians(270));
+    private final Pose movePose4 = new Pose(144-8, 28, Math.toRadians(270));
+    private final Pose movePose5 = new Pose(144-8, 10, Math.toRadians(270));
+    private final Pose movePose6 = new Pose(144-56, 20, Math.toRadians(90));
+    private final Pose movePose7 = new Pose(144-56,8, Math.toRadians(90));
+    private final Pose finalPose = new Pose(144-56, 20, Math.toRadians(90));
 
 
     //alice in pathChains\/
@@ -73,24 +73,24 @@ public class autoPractise extends OpMode {
     private PathChain path10;
     private PathChain path11;
 
-private void shoot(){
-    blocker.setPosition(0.6);
-    sleep(500);
-    intakeBack.setPower(1);
-    intakeForward.setPower(1);
-    sleep(2000);
-    intakeBack.setPower(0);
-    intakeForward.setPower(0);
-    blocker.setPosition(0.05);
-}
+    private void shoot(){
+        blocker.setPosition(0.6);
+        sleep(500);
+        intakeBack.setPower(1);
+        intakeForward.setPower(1);
+        sleep(2000);
+        intakeBack.setPower(0);
+        intakeForward.setPower(0);
+        blocker.setPosition(0.05);
+    }
 
-public void statePathUpdate() {
-    shooter.setVelocity(-1850);
-    target = false;
+    public void statePathUpdate() {
+        shooter.setVelocity(-1850);
+        target = false;
 
-    //1100 for close
-    hood.setPosition(0.25);
-    //0.12 for close
+        //1100 for close
+        hood.setPosition(0.25);
+        //0.12 for close
         switch (pathState) {
             case PATH1:
                 sleep(3500);
@@ -116,7 +116,7 @@ public void statePathUpdate() {
                     setPathState(Pathstate.PATH4);
                 }
                 break;
-                //shoot
+            //shoot
             case PATH4:
                 if (!follower.isBusy()) {
                     shoot();
@@ -164,13 +164,13 @@ public void statePathUpdate() {
 
         }
 
-}
+    }
 
-public void setPathState(Pathstate newState) {
-    pathState = newState;
-    pathTimer.resetTimer();
+    public void setPathState(Pathstate newState) {
+        pathState = newState;
+        pathTimer.resetTimer();
 
-}
+    }
     public void buildPaths() {
         path1 = follower.pathBuilder()
                 .addPath(new BezierLine(startPose, movePose1))
@@ -234,7 +234,7 @@ public void setPathState(Pathstate newState) {
         turret = hardwareMap.get(DcMotor.class, "turret");
         follower.setPose(startPose);
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.pipelineSwitch(2);
+        limelight.pipelineSwitch(0);
 
 
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -257,7 +257,6 @@ public void setPathState(Pathstate newState) {
 
     }
     public void loop(){
-
         limelight.start();
         limelight.setPollRateHz(90);
         LLResult result = limelight.getLatestResult();
@@ -317,15 +316,14 @@ public void setPathState(Pathstate newState) {
         turret.setPower(turningPower);
 
 
+        follower.update();
+        statePathUpdate();
+
+
         telemetry.addData("path state", pathState.toString());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
-        follower.update();
-        statePathUpdate();
-
-
-
     }
 }
