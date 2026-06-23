@@ -42,11 +42,9 @@ public class ShooterPrecisionTestingRed extends OpMode
     double hoodPos;
     int tagID = 0;
     double turningPower = 0;
-    double transferPower = 0;
     boolean gamepadImput = false;
     boolean tagImput = false;
-    int transferTicker = 200;
-    boolean transferTickerCheck = false;
+    boolean tracking = true;
 
 
     @Override
@@ -89,9 +87,9 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setDirection(DcMotor.Direction.FORWARD);
+        shooter.setDirection(DcMotor.Direction.REVERSE);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
-        intakeBack.setDirection(DcMotor.Direction.FORWARD);
+        intakeBack.setDirection(DcMotor.Direction.REVERSE);
         turret.setDirection(DcMotor.Direction.FORWARD);
         hood.setDirection(Servo.Direction.FORWARD);
         blocker.setDirection(Servo.Direction.FORWARD);
@@ -107,7 +105,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.5);
+        blocker.setPosition(0.4);
 
 
         telemetry.addData("status", "Initialized");
@@ -182,16 +180,16 @@ public class ShooterPrecisionTestingRed extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0);
-            hood.setPosition(0.24);
-            shooterVelocity = 1850;
+            blocker.setPosition(0.18);
+            hood.setPosition(0.365);
+            shooterVelocity = 2000;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.12);
-            blocker.setPosition(0);
-            shooterVelocity = 1100;
+            hood.setPosition(0.22);
+            blocker.setPosition(0.2);
+            shooterVelocity = 1250;
         }
         else {
-            blocker.setPosition(0.5);
+            blocker.setPosition(0.4);
             hood.setPosition(0.05);
             shooterVelocity = 800;
         }
@@ -203,38 +201,25 @@ public class ShooterPrecisionTestingRed extends OpMode
             anyImput = true;
         }
         if (gamepad2.left_bumper) {
-            transferPower = 0;
+            intakeBack.setPower(1);
             priorityImput = true;
             anyImput = true;
         }
         if (gamepad2.dpad_down && !priorityImput) {
             intakeForward.setPower(-1);
-            transferPower = 0;
+            intakeBack.setPower(-1);
             anyImput = true;
         }
         if (!anyImput) {
             intakeForward.setPower(0);
-            transferPower = 0;
-        }
-
-        if (gamepad2.x && !transferTickerCheck){
-            transferTickerCheck = true;
-            transferTicker = 200;
-        }
-        if (transferTickerCheck){
-            if (transferTicker != 0){
-                transferTicker =- 1;
-                transferPower = 1;
-            }
-            else {
-                transferPower = 0;
-                transferTickerCheck = false;
-            }
+            intakeBack.setPower(0);
         }
 
         // turret code
 
-
+//        if (gamepad2.left_stick_button || gamepad1.left_stick_button || gamepad1.right_stick_button || gamepad2.right_stick_x != 0){
+//            terminateOpModeNow();
+//        }
 
         if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
             turningPower = (gamepad2.left_stick_x / 2);
@@ -242,9 +227,15 @@ public class ShooterPrecisionTestingRed extends OpMode
         else {
             turningPower = 0;
         }
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && gamepad2.dpad_up) {
+        if (gamepad2.dpad_left) {
+            tracking = false;
+        }
+        if (gamepad2.dpad_up) {
+            tracking = true;
+        }
+        if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && tracking) {
             if (ta < 0.5){
-                if (tx < 0 || tx > 6){
+                if (tx < 7.5 || tx > 1.5){
                     turningPower = (tx / 32.5);
                 }
                 else {
@@ -270,14 +261,14 @@ public class ShooterPrecisionTestingRed extends OpMode
 
 
 //        // old shooter controls, keep commented out for now
-//            if (blockerPowerControl && gamepad2.y && shooterVelocity != 2800) {
+//            if (shooterPowerControl && gamepad2.y && shooterVelocity != 2800) {
 //                shooterVelocity += 100;
-//                blockerPowerControl = false;
-//            } else if (blockerPowerControl && gamepad2.x && shooterVelocity != 0) {
+//                shooterPowerControl = false;
+//            } else if (shooterPowerControl && gamepad2.x && shooterVelocity != 0) {
 //                shooterVelocity -= 100;
-//                blockerPowerControl = false;
+//                shooterPowerControl = false;
 //            } else if (!gamepad2.x && !gamepad2.y) {
-//                blockerPowerControl = true;
+//                shooterPowerControl = true;
 //            }
         // self destruct button
         if ((gamepad1.a && gamepad1.b && gamepad1.x && gamepad1.y) || (gamepad2.a && gamepad2.b && gamepad2.x && gamepad2.y)) {
@@ -311,7 +302,6 @@ public class ShooterPrecisionTestingRed extends OpMode
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-        intakeBack.setPower(transferPower);
         shooter.setVelocity(shooterVelocity);
         turret.setPower(turningPower);
 

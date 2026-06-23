@@ -32,7 +32,7 @@ public class BlockerandHoodBeinFunky extends OpMode
 
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.5);
+        blocker.setPosition(0.33);
 
 
         telemetry.addData("status", "Initialized");
@@ -57,32 +57,18 @@ public class BlockerandHoodBeinFunky extends OpMode
         }
         else if (gamepad2.right_bumper) {
             hood.setPosition(0.12);
-            blocker.setPosition(0);
-
+            blocker.setPosition(0.66);
         }
-        else {
-            blocker.setPosition(0.5);
+        else if (gamepad2.a) {
+            hood.setPosition(0.4);
+            blocker.setPosition(1);
+        }
+        else if (gamepad2.x) {
+            blocker.setPosition(0.33);
             hood.setPosition(0.05);
 
         }
-        if (blockerPowerControl && gamepad2.y) {
-            blocker.setPosition(blocker.getPosition() + 0.1);
-            blockerPowerControl = false;
-        } else if (blockerPowerControl && gamepad2.x) {
-            blocker.setPosition(blocker.getPosition() - 0.1);
-            blockerPowerControl = false;
-        } else if (!gamepad2.x && !gamepad2.y) {
-            blockerPowerControl = true;
-        }
-        if (hoodPowerControl && gamepad2.b) {
-            hood.setPosition(hood.getPosition() + 0.1);
-            hoodPowerControl = false;
-        } else if (hoodPowerControl && gamepad2.a) {
-            hood.setPosition(hood.getPosition() - 0.1);
-            hoodPowerControl = false;
-        } else if (!gamepad2.b && !gamepad2.a) {
-            hoodPowerControl = true;
-        }
+
         telemetry.addData("hood pos ", hood.getPosition());
         telemetry.addData("blocker pos ", blocker.getPosition());
         telemetry.addData("blocker stuff ", blocker.getConnectionInfo(), blocker.getClass(), blocker.getDeviceName());
