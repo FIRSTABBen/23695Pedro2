@@ -52,10 +52,11 @@ public class smallBluBuilders extends OpMode {
     private final Pose movePose2 = new Pose(39,35, Math.toRadians(-180));
     private final Pose movePose3 = new Pose(12,35, Math.toRadians(-180));
     private final Pose movePose4 = new Pose(56, 12, Math.toRadians(-180));
-    private final Pose movePose5 = new Pose(30, 12, Math.toRadians(-180));
-    private final Pose movePose6 = new Pose(30, 12, Math.toRadians(-180));
-//    private final Pose movePose7 = new Pose(144-56,8, Math.toRadians(90));
-//    private final Pose finalPose = new Pose(144-56, 20, Math.toRadians(90));
+    private final Pose movePose5 = new Pose(9, 35, Math.toRadians(270));
+    private final Pose movePose6 = new Pose(9, 9, Math.toRadians(270));
+    private final Pose movePose7 = new Pose(16,16, Math.toRadians(270));
+    private final Pose movePose8 = new Pose(56, 12, Math.toRadians(-180));
+    private final Pose finalPose = new Pose(36, 12, Math.toRadians(-180));
 
 
     //alice in pathChains\/
@@ -66,10 +67,10 @@ public class smallBluBuilders extends OpMode {
     private PathChain path4;
     private PathChain path5;
     private PathChain path6;
-//    private PathChain path7;
-//    private PathChain path8;
-//    private PathChain path9;
-//    private PathChain path10;
+    private PathChain path7;
+    private PathChain path8;
+    private PathChain path9;
+    private PathChain path10;
 //    private PathChain path11;
 
     private void shoot(){
@@ -82,6 +83,7 @@ public class smallBluBuilders extends OpMode {
         intakeForward.setPower(0);
         blocker.setPosition(0.05);
     }
+
 
     public void statePathUpdate() {
         shooter.setVelocity(2000);
@@ -126,7 +128,6 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
-
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path4");
@@ -137,25 +138,43 @@ public class smallBluBuilders extends OpMode {
             case PATH6:
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path5");
-                    follower.followPath(path6, 0.5,true);
+                    follower.followPath(path6, true);
                     setPathState(Pathstate.PATH7);
                 }
                 break;
-//            case PATH7:
-//                if (!follower.isBusy()) {
-//                    telemetry.addLine("done Path6");
-//                    follower.followPath(path7, true);
-//                    setPathState(Pathstate.PATH8);
-//                }
-//                break;
-//            case PATH8:
-//                if (!follower.isBusy()) {
-//                    shoot();
-//                    telemetry.addLine("done Path7");
-//                    follower.followPath(path8, true);
-//                    setPathState(Pathstate.PATH9);
-//                }
-//                break;
+            case PATH7:
+                if (!follower.isBusy()) {
+                    intakeBack.setPower(1);
+                    intakeForward.setPower(1);
+                    telemetry.addLine("done Path6");
+                    follower.followPath(path7, true);
+                    sleep(250);
+                    setPathState(Pathstate.PATH8);
+                }
+                break;
+            case PATH8:
+                if (!follower.isBusy()) {
+                    telemetry.addLine("done Path7");
+                    follower.followPath(path8, true);
+                    setPathState(Pathstate.PATH9);
+                }
+                break;
+            case PATH9:
+                if (!follower.isBusy()) {
+                    sleep(2000);
+                    shoot();
+                    telemetry.addLine("done Path8");
+                    follower.followPath(path9, true);
+                    setPathState(Pathstate.PATH10);
+                }
+                break;
+            case PATH10:
+                if (!follower.isBusy()) {
+                    telemetry.addLine("done Path9");
+                    follower.followPath(path10, true);
+                    setPathState(Pathstate.PATH11);
+                }
+                break;
             default:
                 telemetry.addLine("no state");
                 terminateOpModeNow();
@@ -192,24 +211,24 @@ public class smallBluBuilders extends OpMode {
                 .setLinearHeadingInterpolation(movePose4.getHeading(), movePose5.getHeading())
                 .build();
         path6 = follower.pathBuilder()
-                .addPath(new BezierLine(movePose4, movePose5))
-                .setLinearHeadingInterpolation(movePose4.getHeading(), movePose5.getHeading())
+                .addPath(new BezierLine(movePose5, movePose6))
+                .setLinearHeadingInterpolation(movePose5.getHeading(), movePose6.getHeading())
                 .build();
-//        path7 = follower.pathBuilder()
-//                .addPath(new BezierLine(movePose5, startPose))
-//                .setLinearHeadingInterpolation(movePose5.getHeading(), startPose.getHeading())
-//                .build();
-//        path8 = follower.pathBuilder()
-//                .addPath(new BezierLine(startPose, movePose6))
-//                .setLinearHeadingInterpolation(startPose.getHeading(), movePose6.getHeading())
-//                .build();
-//        path9 = follower.pathBuilder()
-//                .addPath(new BezierLine(movePose6, movePose7))
-//                .setLinearHeadingInterpolation(movePose6.getHeading(), movePose7.getHeading())
-//                .build();
+        path7 = follower.pathBuilder()
+                .addPath(new BezierLine(movePose6, movePose7))
+                .setLinearHeadingInterpolation(movePose6.getHeading(), movePose7.getHeading())
+                .build();
+        path8 = follower.pathBuilder()
+                .addPath(new BezierLine(movePose7, movePose8))
+                .setLinearHeadingInterpolation(movePose7.getHeading(), movePose8.getHeading())
+                .build();
+        path9 = follower.pathBuilder()
+                .addPath(new BezierLine(movePose8, finalPose))
+                .setLinearHeadingInterpolation(movePose8.getHeading(), finalPose.getHeading())
+                .build();
 //        path10 = follower.pathBuilder()
-//                .addPath(new BezierLine(movePose7, startPose))
-//                .setLinearHeadingInterpolation(movePose7.getHeading(), startPose.getHeading())
+//                .addPath(new BezierLine(movePose7, movePose8))
+//                .setLinearHeadingInterpolation(movePose8.getHeading(), finalPose.getHeading())
 //                .build();
 //        path11 = follower.pathBuilder()
 //                .addPath(new BezierLine(startPose, finalPose))
@@ -247,12 +266,32 @@ public class smallBluBuilders extends OpMode {
         hood.setDirection(Servo.Direction.FORWARD);
         blocker.setDirection(Servo.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
+        LLResult result = limelight.getLatestResult();
+        double tx = result.getTx();
+        double ta = result.getTa();
 
     }
 
     public void start() {
         opModeTimer.resetTimer();
         setPathState(pathState);
+        limelight.start();
+        limelight.setPollRateHz(90);
+        LLResult result = limelight.getLatestResult();
+        String tagseen = " ";
+        String limelight_telemetry = "Limelight Data";
+        int pipeline = result.getPipelineIndex();
+
+        if (result.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                tagID = fr.getFiducialId();
+            }
+        } else {
+            tagID = 0;
+            target = true;
+        }
+
 
     }
     public void loop(){
@@ -274,25 +313,7 @@ public class smallBluBuilders extends OpMode {
             tagID = 0;
             target = true;
         }
-        if ((result.getStaleness() < 100) && ((result != null && result.isValid()))) {
-            if (ta < 0.5) {
-                if (tx < -7.5 || tx > -1.5) {
-                    turningPower = (tx / 32.5);
-                } else {
-                    turningPower = 0;
-                    target = true;
-                }
-            } else if (ta > 0.5) {
-                if (tx < -3 || tx > 3) {
-                    turningPower = (tx / 32.5);
-                } else if (tx < -7 || tx > 7) {
-                    turningPower = (tx / 40);
-                } else {
-                    turningPower = 0;
-                    target = true;
-                }
-            }
-        }
+
 
 
         long staleness = result.getStaleness();
