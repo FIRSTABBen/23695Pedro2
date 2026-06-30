@@ -83,6 +83,24 @@ public class smallBluBuilders extends OpMode {
         intakeForward.setPower(0);
         blocker.setPosition(0.05);
     }
+//    private void align(){
+//        int timer = (500);
+//        LLResult result = limelight.getLatestResult();
+//        double tx = result.getTx();
+//        if (timer < 0){
+//            result = limelight.getLatestResult();
+//            tx = result.getTx();
+//            if (tx < -7.5 || tx > -1.5){
+//                turningPower = (tx / 32.5);
+//            }
+//            else {
+//                turningPower = 0;
+//            }
+//            timer =- 1;
+//            telemetry.addData("tag x ", (tx));
+//            telemetry.addData("timer ", (timer));
+//        }
+//    }
 
 
     public void statePathUpdate() {
@@ -99,6 +117,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH2:
                 if (!follower.isBusy()) {
+//                    align();
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path1");
@@ -128,6 +147,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
+//                    align();
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path4");
@@ -137,18 +157,20 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH6:
                 if (!follower.isBusy()) {
+                    intakeBack.setPower(1);
+                    intakeForward.setPower(1);
                     telemetry.addLine("done Path5");
                     follower.followPath(path6, true);
+                    sleep(250);
                     setPathState(Pathstate.PATH7);
                 }
                 break;
             case PATH7:
                 if (!follower.isBusy()) {
-                    intakeBack.setPower(1);
-                    intakeForward.setPower(1);
+                    intakeBack.setPower(0);
+                    intakeForward.setPower(0);
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
-                    sleep(250);
                     setPathState(Pathstate.PATH8);
                 }
                 break;
@@ -161,6 +183,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
+//                    align();
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path8");
@@ -172,12 +195,11 @@ public class smallBluBuilders extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path9");
                     follower.followPath(path10, true);
-                    setPathState(Pathstate.PATH11);
                 }
                 break;
             default:
                 telemetry.addLine("no state");
-                terminateOpModeNow();
+                stop();
                 break;
 
         }
@@ -282,6 +304,7 @@ public class smallBluBuilders extends OpMode {
         String limelight_telemetry = "Limelight Data";
         int pipeline = result.getPipelineIndex();
 
+
         if (result.isValid()) {
             List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
             for (LLResultTypes.FiducialResult fr : fiducialResults) {
@@ -294,7 +317,7 @@ public class smallBluBuilders extends OpMode {
 
 
     }
-    public void loop(){
+    public void loop() {
         limelight.start();
         limelight.setPollRateHz(90);
         LLResult result = limelight.getLatestResult();
@@ -313,7 +336,6 @@ public class smallBluBuilders extends OpMode {
             tagID = 0;
             target = true;
         }
-
 
 
         long staleness = result.getStaleness();
@@ -346,4 +368,12 @@ public class smallBluBuilders extends OpMode {
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
     }
+    @Override
+    public void stop(){
+            shooter.setVelocity(0);
+            setPathState(null);
+            limelight.stop();
+            requestOpModeStop();
+    }
+
 }
