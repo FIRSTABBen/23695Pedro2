@@ -52,7 +52,7 @@ public class bigRedBread extends OpMode {
     private final Pose movePose2 = new Pose(120,85, Math.toRadians(0));
     private final Pose movePose3 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose4 = new Pose(85,58, Math.toRadians(0));
-    private final Pose movePose5 = new Pose(120, 58, Math.toRadians(0));
+    private final Pose movePose5 = new Pose(130, 52, Math.toRadians(0));
     private final Pose movePose6 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose7 = new Pose(85,130, Math.toRadians(0));
 
@@ -97,6 +97,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
+                    shoot();
                     setPathState(Pathstate.PATH3);
                 }
                 break;
@@ -104,6 +105,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path2");
                     follower.followPath(path3, true);
+
                     setPathState(Pathstate.PATH4);
                 }
                 break;
@@ -112,6 +114,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
+                    shoot();
                     setPathState(Pathstate.PATH5);
                 }
                 break;
@@ -126,6 +129,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path5");
                     follower.followPath(path6,true);
+
                     setPathState(Pathstate.PATH7);
                 }
                 break;
@@ -133,21 +137,19 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
+                    shoot();
+                    setPathState(Pathstate.PATH8);
                 }
-  //                  setPathState(Pathstate.PATH8);
 
-//                break;
-//            case PATH8:
-//                if (!follower.isBusy()) {
-//                    shoot();
-//                    telemetry.addLine("done Path7");
-//                    follower.followPath(path8, true);
-//                    setPathState(Pathstate.PATH9);
-//                }
-//                break;
+                break;
+            case PATH8:
+                if (!follower.isBusy()) {
+                    telemetry.addLine("done Path7");
+                    terminateOpModeNow();
+                }
+                break;
             default:
                 telemetry.addLine("no state");
-                //terminateOpModeNow();
                 break;
 
         }
