@@ -72,17 +72,16 @@ public class bigRedBread extends OpMode {
 
     private void shoot(){
         blocker.setPosition(0.6);
-        sleep(1000);
+        sleep(2000);
         intakeBack.setPower(1);
-        intakeForward.setPower(1);
-        sleep(1000);
+        sleep(2000);
         intakeBack.setPower(0);
-        intakeForward.setPower(0);
         blocker.setPosition(0.05);
     }
 
     public void statePathUpdate() {
-        shooter.setVelocity(2000);
+        shooter.setVelocity(1200);
+        intakeForward.setPower(1);
         target = false;
 
         //1100 for close
@@ -105,7 +104,6 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path2");
                     follower.followPath(path3, true);
-
                     setPathState(Pathstate.PATH4);
                 }
                 break;
@@ -129,7 +127,6 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path5");
                     follower.followPath(path6,true);
-
                     setPathState(Pathstate.PATH7);
                 }
                 break;

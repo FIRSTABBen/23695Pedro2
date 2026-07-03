@@ -7,20 +7,20 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import java.util.List;
 
 
 @Autonomous
-public class smallBluBuilders extends OpMode {
+public class smallBluBuildersTesting extends OpMode {
 
     private Follower follower;
 
@@ -37,6 +37,7 @@ public class smallBluBuilders extends OpMode {
 
 
     double turningPower = 0;
+    int timer = (500);
     int tagID = 0;
     boolean target = false;
 
@@ -100,7 +101,6 @@ public class smallBluBuilders extends OpMode {
 //            telemetry.addData("tag x ", (tx));
 //            telemetry.addData("timer ", (timer));
 //        }
-//    }
 
 
     public void statePathUpdate() {
@@ -112,6 +112,7 @@ public class smallBluBuilders extends OpMode {
         //0.12 for close
         switch (pathState) {
             case PATH1:
+                loop();
                 follower.followPath(path1, true);
                 setPathState(Pathstate.PATH2);
                 break;
@@ -288,9 +289,7 @@ public class smallBluBuilders extends OpMode {
         hood.setDirection(Servo.Direction.FORWARD);
         blocker.setDirection(Servo.Direction.FORWARD);
         turret.setDirection(DcMotor.Direction.FORWARD);
-        LLResult result = limelight.getLatestResult();
-        double tx = result.getTx();
-        double ta = result.getTa();
+
 
     }
 
@@ -336,6 +335,17 @@ public class smallBluBuilders extends OpMode {
             tagID = 0;
             target = true;
         }
+        if (tx < -7.5 || tx > -1.5) {
+            turningPower = (tx / 32.5);
+            timer = -1;
+            telemetry.addData("tag x ", (tx));
+            telemetry.addData("timer ", (timer));
+        } else {
+            turningPower = 0;
+            timer = -1;
+            telemetry.addData("tag x ", (tx));
+            telemetry.addData("timer ", (timer));
+        }
 
 
         long staleness = result.getStaleness();
@@ -367,6 +377,7 @@ public class smallBluBuilders extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
+
     }
     @Override
     public void stop(){
