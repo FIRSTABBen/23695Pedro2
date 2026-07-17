@@ -80,12 +80,12 @@ public class bigBluBuilders extends OpMode {
     }
 
     public void statePathUpdate() {
-        shooter.setVelocity(1250);
+        shooter.setVelocity(1200);
         intakeForward.setPower(1);
         target = false;
 
         //1100 for close
-        hood.setPosition(0.5);
+        hood.setPosition(0.3);
         //0.12 for close
         switch (pathState) {
             case PATH1:
@@ -117,7 +117,8 @@ public class bigBluBuilders extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
-                    turret.setTargetPosition(380);
+                    turret.setTargetPosition(370);
+                    //minus is left
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();

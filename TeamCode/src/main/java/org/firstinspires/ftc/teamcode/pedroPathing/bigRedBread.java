@@ -49,10 +49,10 @@ public class bigRedBread extends OpMode {
 
     private final Pose startPose = new Pose(122,121, Math.toRadians(36));
     private final Pose movePose1 = new Pose(85, 85, Math.toRadians(0));
-    private final Pose movePose2 = new Pose(120,85, Math.toRadians(0));
+    private final Pose movePose2 = new Pose(122,85, Math.toRadians(0));
     private final Pose movePose3 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose4 = new Pose(85,58, Math.toRadians(0));
-    private final Pose movePose5 = new Pose(130, 52, Math.toRadians(0));
+    private final Pose movePose5 = new Pose(132, 52, Math.toRadians(0));
     private final Pose movePose6 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose7 = new Pose(85,130, Math.toRadians(0));
 
@@ -80,12 +80,12 @@ public class bigRedBread extends OpMode {
     }
 
     public void statePathUpdate() {
-        shooter.setVelocity(1200);
+        shooter.setVelocity(1210);
         intakeForward.setPower(1);
         target = false;
 
         //1100 for close
-        hood.setPosition(0.2);
+        hood.setPosition(0.3);
         //0.12 for close
         switch (pathState) {
             case PATH1:
@@ -97,7 +97,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
-                    turret.setTargetPosition(-380);
+                    turret.setTargetPosition(-375);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(1500);
@@ -117,7 +117,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
-                    turret.setTargetPosition(-380);
+                    turret.setTargetPosition(-375);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();
@@ -142,7 +142,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
-                    turret.setTargetPosition(-380);
+                    turret.setTargetPosition(-375);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();
