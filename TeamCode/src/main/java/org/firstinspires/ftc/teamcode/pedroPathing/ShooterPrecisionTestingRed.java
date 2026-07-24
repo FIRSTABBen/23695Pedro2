@@ -235,7 +235,7 @@ public class ShooterPrecisionTestingRed extends OpMode
         }
         if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && tracking) {
             if (ta < 0.5){
-                if (tx < 7.5 || tx > 1.5){
+                if (tx < 4 || tx > 0){
                     turningPower = (tx / 32.5);
                 }
                 else {

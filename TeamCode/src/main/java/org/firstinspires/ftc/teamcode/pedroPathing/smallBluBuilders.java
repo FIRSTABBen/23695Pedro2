@@ -90,7 +90,7 @@ public class smallBluBuilders extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.365);
+        hood.setPosition(0.275);
         intakeForward.setPower(1);
         //0.12 for close
         switch (pathState) {

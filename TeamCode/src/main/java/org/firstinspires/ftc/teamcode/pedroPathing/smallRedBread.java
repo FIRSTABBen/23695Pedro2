@@ -87,7 +87,7 @@ public class smallRedBread extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.4);
+        hood.setPosition(0.3);
         intakeForward.setPower(1);
         //0.12 for close
         switch (pathState) {
@@ -130,7 +130,7 @@ public class smallRedBread extends OpMode {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(-620);
+                    turret.setTargetPosition(-650);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2000);
@@ -168,7 +168,7 @@ public class smallRedBread extends OpMode {
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(-720);
+                    turret.setTargetPosition(-650);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2000);

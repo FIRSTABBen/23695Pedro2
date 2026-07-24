@@ -85,7 +85,7 @@ public class bigBluBuilders extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.3);
+        hood.setPosition(0.275);
         //0.12 for close
         switch (pathState) {
             case PATH1:
