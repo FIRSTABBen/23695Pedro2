@@ -60,12 +60,12 @@ public class BlockerandHoodBeinFunky extends OpMode
             blocker.setPosition(0.66);
         }
         else if (gamepad2.a) {
-            hood.setPosition(0.4);
+            hood.setPosition(hood.getPosition() + 0.01);
             blocker.setPosition(1);
         }
         else if (gamepad2.x) {
             blocker.setPosition(0.33);
-            hood.setPosition(0.05);
+            hood.setPosition(hood.getPosition() - 0.01);
 
         }
 

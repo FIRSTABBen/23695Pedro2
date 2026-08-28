@@ -105,7 +105,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hood.setPosition(0.27);
-        blocker.setPosition(0.4);
+        blocker.setPosition(0.05);
 
 
         telemetry.addData("status", "Initialized");
@@ -180,18 +180,18 @@ public class ShooterPrecisionTestingBlue extends OpMode
 
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
-            blocker.setPosition(0.18);
-            hood.setPosition(0.365);
+            blocker.setPosition(0.6);
+            hood.setPosition(0.275);
             shooterVelocity = 2000;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.22);
-            blocker.setPosition(0.2);
+            hood.setPosition(0.2);
+            blocker.setPosition(0.6);
             shooterVelocity = 1250;
         }
         else {
-            blocker.setPosition(0.4);
+            blocker.setPosition(0.05);
             hood.setPosition(0.05);
-            shooterVelocity = 800;
+            shooterVelocity = 1600;
         }
 
         // intake and transfer controls
@@ -235,7 +235,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         }
         if ((result.getStaleness() < 100) && ((result != null && result.isValid())) && tracking) {
             if (ta < 0.5){
-                if (tx < -7.5 || tx > -1.5){
+                if (tx < 0 || tx > -4){
                     turningPower = (tx / 32.5);
                 }
                 else {

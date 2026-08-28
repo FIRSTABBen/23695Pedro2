@@ -14,11 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-import java.util.List;
-
-
 @Autonomous
-public class smallBluBuilders extends OpMode {
+public class smallRedBread extends OpMode {
 
     private Follower follower;
 
@@ -46,16 +43,16 @@ public class smallBluBuilders extends OpMode {
 
     Pathstate pathState;
 
-    private final Pose startPose = new Pose(56,8, Math.toRadians(-180));
-    private final Pose movePose1 = new Pose(56, 12, Math.toRadians(-180));
-    private final Pose movePose2 = new Pose(39,35, Math.toRadians(-180));
-    private final Pose movePose3 = new Pose(12,35, Math.toRadians(-180));
-    private final Pose movePose4 = new Pose(56, 12, Math.toRadians(-180));
-    private final Pose movePose5 = new Pose(9, 35, Math.toRadians(270));
-    private final Pose movePose6 = new Pose(9, 9, Math.toRadians(270));
-    private final Pose movePose7 = new Pose(16,16, Math.toRadians(270));
-    private final Pose movePose8 = new Pose(56, 12, Math.toRadians(-180));
-    private final Pose finalPose = new Pose(36, 12, Math.toRadians(-180));
+    private final Pose startPose = new Pose(88,8, Math.toRadians(0));
+    private final Pose movePose1 = new Pose(88, 12, Math.toRadians(0));
+    private final Pose movePose2 = new Pose(105,35, Math.toRadians(0));
+    private final Pose movePose3 = new Pose(132,35, Math.toRadians(0));
+    private final Pose movePose4 = new Pose(88, 12, Math.toRadians(0));
+    private final Pose movePose5 = new Pose(135, 35, Math.toRadians(270));
+    private final Pose movePose6 = new Pose(135, 9, Math.toRadians(270));
+    private final Pose movePose7 = new Pose(128,16, Math.toRadians(270));
+    private final Pose movePose8 = new Pose(88, 12, Math.toRadians(0));
+    private final Pose finalPose = new Pose(108, 12, Math.toRadians(0));
 
 
     //alice in pathChains\/
@@ -90,7 +87,7 @@ public class smallBluBuilders extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.275);
+        hood.setPosition(0.3);
         intakeForward.setPower(1);
         //0.12 for close
         switch (pathState) {
@@ -101,7 +98,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH2:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(620);
+                    turret.setTargetPosition(-620);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2500);
@@ -133,7 +130,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(650);
+                    turret.setTargetPosition(-650);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2000);
@@ -171,7 +168,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(650);
+                    turret.setTargetPosition(-650);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2000);

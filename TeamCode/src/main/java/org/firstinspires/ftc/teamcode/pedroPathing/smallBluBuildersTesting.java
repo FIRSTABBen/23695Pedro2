@@ -7,18 +7,20 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
 import java.util.List;
 
 
 @Autonomous
-public class smallBluBuilders extends OpMode {
+public class smallBluBuildersTesting extends OpMode {
 
     private Follower follower;
 
@@ -31,11 +33,11 @@ public class smallBluBuilders extends OpMode {
     private Servo hood = null;
     private Servo blocker = null;
 
-
-
+    private Limelight3A limelight = null;
 
 
     double turningPower = 0;
+    int timer = (500);
     int tagID = 0;
     boolean target = false;
 
@@ -76,35 +78,48 @@ public class smallBluBuilders extends OpMode {
         blocker.setPosition(0.6);
         sleep(1000);
         intakeBack.setPower(1);
-        //intakeForward.setPower(1);
+        intakeForward.setPower(1);
         sleep(1000);
         intakeBack.setPower(0);
-        //intakeForward.setPower(0);
+        intakeForward.setPower(0);
         blocker.setPosition(0.05);
     }
-
+//    private void align(){
+//        int timer = (500);
+//        LLResult result = limelight.getLatestResult();
+//        double tx = result.getTx();
+//        while (timer > 0){
+//            result = limelight.getLatestResult();
+//            tx = result.getTx();
+//            if (tx < -7.5 || tx > -1.5){
+//                turningPower = (tx / 32.5);
+//            }
+//            else {
+//                turningPower = 0;
+//            }
+//            timer =- 1;
+//            telemetry.addData("tag x ", (tx));
+//            telemetry.addData("timer ", (timer));
+//        }
 
 
     public void statePathUpdate() {
-        shooter.setVelocity(1700);
+        shooter.setVelocity(2000);
         target = false;
 
         //1100 for close
-        hood.setPosition(0.275);
-        intakeForward.setPower(1);
+        hood.setPosition(0.365);
         //0.12 for close
         switch (pathState) {
             case PATH1:
-                init();
+                loop();
                 follower.followPath(path1, true);
                 setPathState(Pathstate.PATH2);
                 break;
             case PATH2:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(620);
-                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    turret.setPower(0.75);
-                    sleep(2500);
+//                    align();
+                    sleep(2000);
                     shoot();
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
@@ -114,7 +129,7 @@ public class smallBluBuilders extends OpMode {
             case PATH3:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(1);
-                    //intakeForward.setPower(1);
+                    intakeForward.setPower(1);
                     telemetry.addLine("done Path2");
                     follower.followPath(path3, true);
                     sleep(250);
@@ -125,7 +140,7 @@ public class smallBluBuilders extends OpMode {
             case PATH4:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(0);
-                    //intakeForward.setPower(0);
+                    intakeForward.setPower(0);
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
                     setPathState(Pathstate.PATH5);
@@ -133,9 +148,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH5:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(650);
-                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    turret.setPower(0.75);
+//                    align();
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path4");
@@ -146,7 +159,7 @@ public class smallBluBuilders extends OpMode {
             case PATH6:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(1);
-                    //intakeForward.setPower(1);
+                    intakeForward.setPower(1);
                     telemetry.addLine("done Path5");
                     follower.followPath(path6, true);
                     sleep(250);
@@ -156,7 +169,7 @@ public class smallBluBuilders extends OpMode {
             case PATH7:
                 if (!follower.isBusy()) {
                     intakeBack.setPower(0);
-                    //intakeForward.setPower(0);
+                    intakeForward.setPower(0);
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
                     setPathState(Pathstate.PATH8);
@@ -171,9 +184,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(650);
-                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    turret.setPower(0.75);
+//                    align();
                     sleep(2000);
                     shoot();
                     telemetry.addLine("done Path8");
@@ -263,14 +274,14 @@ public class smallBluBuilders extends OpMode {
         blocker = hardwareMap.get(Servo.class, "blocker");
         turret = hardwareMap.get(DcMotor.class, "turret");
         follower.setPose(startPose);
-        int turretPos = 620;
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(2);
 
 
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeForward.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         shooter.setDirection(DcMotor.Direction.REVERSE);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
@@ -283,11 +294,78 @@ public class smallBluBuilders extends OpMode {
     }
 
     public void start() {
+        opModeTimer.resetTimer();
+        setPathState(pathState);
+        limelight.start();
+        limelight.setPollRateHz(90);
+        LLResult result = limelight.getLatestResult();
+        String tagseen = " ";
+        String limelight_telemetry = "Limelight Data";
+        int pipeline = result.getPipelineIndex();
 
+
+        if (result.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                tagID = fr.getFiducialId();
+            }
+        } else {
+            tagID = 0;
+            target = true;
+        }
 
 
     }
     public void loop() {
+        limelight.start();
+        limelight.setPollRateHz(90);
+        LLResult result = limelight.getLatestResult();
+        double tx = result.getTx();
+        double ta = result.getTa();
+        String tagseen = " ";
+        String limelight_telemetry = "Limelight Data";
+        int pipeline = result.getPipelineIndex();
+
+        if (result.isValid()) {
+            List<LLResultTypes.FiducialResult> fiducialResults = result.getFiducialResults();
+            for (LLResultTypes.FiducialResult fr : fiducialResults) {
+                tagID = fr.getFiducialId();
+            }
+        } else {
+            tagID = 0;
+            target = true;
+        }
+        if (tx < -7.5 || tx > -1.5) {
+            turningPower = (tx / 32.5);
+            timer = -1;
+            telemetry.addData("tag x ", (tx));
+            telemetry.addData("timer ", (timer));
+        } else {
+            turningPower = 0;
+            timer = -1;
+            telemetry.addData("tag x ", (tx));
+            telemetry.addData("timer ", (timer));
+        }
+
+
+        long staleness = result.getStaleness();
+        if (staleness < 100) {
+            telemetry.addData("data", "good");
+        } else {
+            telemetry.addData("data", "bad (" + staleness + " ms)");
+        }
+        if (result != null && result.isValid()) {
+            tagseen = "true";
+        } else {
+            tagseen = "false";
+        }
+        telemetry.addData("tagSeen ", tagseen);
+        telemetry.addData("limelight x = ", tx);
+        telemetry.addData("limelight a = ", ta);
+        telemetry.addData("limelight pipeline = ", pipeline);
+        telemetry.addData("tag ", "ID: %d", tagID);
+        telemetry.update();
+        turret.setPower(turningPower);
 
 
         follower.update();
@@ -299,11 +377,13 @@ public class smallBluBuilders extends OpMode {
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("Path time", pathTimer.getElapsedTimeSeconds());
+
     }
     @Override
     public void stop(){
             shooter.setVelocity(0);
             setPathState(null);
+            limelight.stop();
             requestOpModeStop();
     }
 

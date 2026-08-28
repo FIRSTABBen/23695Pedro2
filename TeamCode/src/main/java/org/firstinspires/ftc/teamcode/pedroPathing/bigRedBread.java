@@ -49,10 +49,10 @@ public class bigRedBread extends OpMode {
 
     private final Pose startPose = new Pose(122,121, Math.toRadians(36));
     private final Pose movePose1 = new Pose(85, 85, Math.toRadians(0));
-    private final Pose movePose2 = new Pose(120,85, Math.toRadians(0));
+    private final Pose movePose2 = new Pose(122,85, Math.toRadians(0));
     private final Pose movePose3 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose4 = new Pose(85,58, Math.toRadians(0));
-    private final Pose movePose5 = new Pose(130, 52, Math.toRadians(0));
+    private final Pose movePose5 = new Pose(132, 52, Math.toRadians(0));
     private final Pose movePose6 = new Pose(85,85, Math.toRadians(0));
     private final Pose movePose7 = new Pose(85,130, Math.toRadians(0));
 
@@ -74,22 +74,22 @@ public class bigRedBread extends OpMode {
         blocker.setPosition(0.6);
         sleep(1000);
         intakeBack.setPower(1);
-        intakeForward.setPower(1);
         sleep(1000);
         intakeBack.setPower(0);
-        intakeForward.setPower(0);
         blocker.setPosition(0.05);
     }
 
     public void statePathUpdate() {
-        shooter.setVelocity(2000);
+        shooter.setVelocity(1210);
+        intakeForward.setPower(1);
         target = false;
 
         //1100 for close
-        hood.setPosition(0.365);
+        hood.setPosition(0.275);
         //0.12 for close
         switch (pathState) {
             case PATH1:
+                init();
                 follower.followPath(path1, true);
                 setPathState(Pathstate.PATH2);
                 break;
@@ -97,6 +97,10 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
+                    turret.setTargetPosition(-375);
+                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    turret.setPower(0.75);
+                    sleep(1500);
                     shoot();
                     setPathState(Pathstate.PATH3);
                 }
@@ -105,7 +109,6 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path2");
                     follower.followPath(path3, true);
-
                     setPathState(Pathstate.PATH4);
                 }
                 break;
@@ -114,6 +117,9 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
+                    turret.setTargetPosition(-375);
+                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    turret.setPower(0.75);
                     shoot();
                     setPathState(Pathstate.PATH5);
                 }
@@ -129,7 +135,6 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path5");
                     follower.followPath(path6,true);
-
                     setPathState(Pathstate.PATH7);
                 }
                 break;
@@ -137,6 +142,9 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
+                    turret.setTargetPosition(-375);
+                    turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    turret.setPower(0.75);
                     shoot();
                     setPathState(Pathstate.PATH8);
                 }
@@ -218,7 +226,8 @@ public class bigRedBread extends OpMode {
         shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeForward.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         shooter.setDirection(DcMotor.Direction.REVERSE);
         intakeForward.setDirection(DcMotor.Direction.FORWARD);
