@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp
-public class SimpleDrive extends OpMode
-{
+public class SimpleDrive extends OpMode {
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
@@ -102,12 +101,12 @@ public class SimpleDrive extends OpMode
         leftBackPower = Range.clip(drive + turn - strafe, -1, 1);
         rightBackPower = Range.clip(drive - turn + strafe, -1, 1);
         // dividing power if right bumper is pressed
-        if(gamepad1.right_trigger > 0.5){
+        if (gamepad1.right_trigger > 0.5) {
             leftFrontPower /= 2;
             leftBackPower /= 2;
             rightFrontPower /= 2;
             rightBackPower /= 2;
-        } else if(gamepad1.left_trigger > 0.5){
+        } else if (gamepad1.left_trigger > 0.5) {
             leftFrontPower /= 4;
             leftBackPower /= 4;
             rightFrontPower /= 4;
@@ -119,8 +118,7 @@ public class SimpleDrive extends OpMode
             shooterVelocity = 1800;
         } else if (gamepad2.right_bumper) {
             shooterVelocity = 1400;
-        }
-        else {
+        } else {
             shooterVelocity = 0;
         }
 //            if (gamepad1.dpad_down) {
@@ -130,15 +128,12 @@ public class SimpleDrive extends OpMode
         // intake and transfer controls
         if (gamepad2.left_trigger > 0.5) {
             intakeForward.setPower(1);
-        }
-        else if (gamepad2.left_bumper && shooter.getVelocity() > 1399) {
+        } else if (gamepad2.left_bumper && shooter.getVelocity() > 1399) {
             intakeBack.setPower(1);
-        }
-        else if (gamepad2.left_bumper && gamepad2.left_trigger > 0.5) {
+        } else if (gamepad2.left_bumper && gamepad2.left_trigger > 0.5) {
             intakeForward.setPower(1);
             intakeBack.setPower(1);
-        }
-        else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_down) {
             intakeForward.setPower(-1);
             intakeBack.setPower(-1);
         } else {
@@ -146,7 +141,7 @@ public class SimpleDrive extends OpMode
             intakeBack.setPower(0);
         }
         // turret code
-        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
+        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05) {
             turret.setPower(gamepad2.left_stick_x / 2);
         } else {
             turret.setPower(0);
