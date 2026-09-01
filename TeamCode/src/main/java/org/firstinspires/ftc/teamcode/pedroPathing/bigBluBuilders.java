@@ -85,7 +85,7 @@ public class bigBluBuilders extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.275);
+        hood.setPosition(0.17);
         //0.12 for close
         switch (pathState) {
             case PATH1:
@@ -97,7 +97,7 @@ public class bigBluBuilders extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
-                    turret.setTargetPosition(380);
+                    turret.setTargetPosition(365);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(1500);
@@ -117,7 +117,7 @@ public class bigBluBuilders extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
-                    turret.setTargetPosition(370);
+                    turret.setTargetPosition(375);
                     //minus is left
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
@@ -143,7 +143,7 @@ public class bigBluBuilders extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
-                    turret.setTargetPosition(380);
+                    turret.setTargetPosition(375);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();

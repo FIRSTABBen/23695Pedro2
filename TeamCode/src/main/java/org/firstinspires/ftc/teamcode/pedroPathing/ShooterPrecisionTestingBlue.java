@@ -41,6 +41,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
     boolean hoodController = true;
     double hoodPos;
     int tagID = 0;
+    int baseVeloc = 1600;
     double turningPower = 0;
     boolean gamepadImput = false;
     boolean tagImput = false;
@@ -104,7 +105,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
         intakeBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hood.setPosition(0.27);
+        hood.setPosition(0);
         blocker.setPosition(0.05);
 
 
@@ -181,17 +182,27 @@ public class ShooterPrecisionTestingBlue extends OpMode
         // shooter controls
         if (gamepad2.right_trigger > 0.5) {
             blocker.setPosition(0.6);
-            hood.setPosition(0.275);
+            hood.setPosition(0.265);
             shooterVelocity = 2000;
         } else if (gamepad2.right_bumper) {
-            hood.setPosition(0.2);
+            hood.setPosition(0.17);
             blocker.setPosition(0.6);
             shooterVelocity = 1250;
         }
         else {
             blocker.setPosition(0.05);
             hood.setPosition(0.05);
-            shooterVelocity = 1600;
+            shooterVelocity = baseVeloc;
+        }
+        //base velocity settings
+        if (gamepad2.b) {
+            baseVeloc = 2000;
+        }
+        if (gamepad2.a) {
+            baseVeloc = 1250;
+        }
+        if (gamepad2.x) {
+            baseVeloc = 1600;
         }
 
         // intake and transfer controls
@@ -221,12 +232,7 @@ public class ShooterPrecisionTestingBlue extends OpMode
 //            terminateOpModeNow();
 //        }
 
-        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
-            turningPower = (gamepad2.left_stick_x / 2);
-        }
-        else {
-            turningPower = 0;
-        }
+
         if (gamepad2.dpad_left) {
             tracking = false;
         }
@@ -253,6 +259,12 @@ public class ShooterPrecisionTestingBlue extends OpMode
                     turningPower = 0;
                 }
             }
+        }
+        if (gamepad2.left_stick_x > 0.05 || gamepad2.left_stick_x < -0.05){
+            turningPower = (gamepad2.left_stick_x / 2);
+        }
+        else {
+            turningPower = 0;
         }
 
 

@@ -80,12 +80,12 @@ public class bigRedBread extends OpMode {
     }
 
     public void statePathUpdate() {
-        shooter.setVelocity(1210);
+        shooter.setVelocity(1200);
         intakeForward.setPower(1);
         target = false;
 
         //1100 for close
-        hood.setPosition(0.275);
+        hood.setPosition(0.17);
         //0.12 for close
         switch (pathState) {
             case PATH1:
@@ -97,7 +97,8 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path1");
                     follower.followPath(path2, true);
-                    turret.setTargetPosition(-375);
+                    turret.setTargetPosition(-360);
+                    //less is left more is right
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(1500);
@@ -117,7 +118,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path3");
                     follower.followPath(path4, true);
-                    turret.setTargetPosition(-375);
+                    turret.setTargetPosition(-360);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();
@@ -142,7 +143,7 @@ public class bigRedBread extends OpMode {
                 if (!follower.isBusy()) {
                     telemetry.addLine("done Path6");
                     follower.followPath(path7, true);
-                    turret.setTargetPosition(-375);
+                    turret.setTargetPosition(-360);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     shoot();

@@ -90,7 +90,7 @@ public class smallBluBuilders extends OpMode {
         target = false;
 
         //1100 for close
-        hood.setPosition(0.275);
+        hood.setPosition(0.265);
         intakeForward.setPower(1);
         //0.12 for close
         switch (pathState) {
@@ -171,7 +171,7 @@ public class smallBluBuilders extends OpMode {
                 break;
             case PATH9:
                 if (!follower.isBusy()) {
-                    turret.setTargetPosition(650);
+                    turret.setTargetPosition(700);
                     turret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     turret.setPower(0.75);
                     sleep(2000);
